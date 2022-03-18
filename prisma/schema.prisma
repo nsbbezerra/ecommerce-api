@@ -9,3 +9,261 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Company {
+  id                     String   @id @default(uuid())
+  name                   String
+  cnpj                   String   @unique @db.VarChar(20)
+  fantasy_name           String
+  municipal_registration String?
+  state_registration     String?
+  phone                  String   @db.VarChar(12)
+  email                  String?
+  street                 String
+  number                 String
+  comp                   String?
+  district               String
+  zip_code               String   @db.VarChar(11)
+  city                   String
+  state                  String   @db.VarChar(2)
+  expires_code_date      DateTime
+  company_code           String   @unique
+  thumbnail              String
+  active                 Boolean  @default(true)
+  created_at             DateTime @default(now())
+
+  Employee Employee[]
+  Client   Client[]
+  Product  Product[]
+  @@map("companies")
+  Order   Order[]
+  Config  Config[]
+  Revenue Revenue[]
+  Expense Expense[]
+}
+
+enum Permission {
+  all
+  cashier
+  seller
+}
+
+model Employee {
+  id         String     @id @default(uuid())
+  company_id String
+  company    Company    @relation(fields: [company_id], references: [id])
+  name       String
+  phone      String?
+  user       String     @unique
+  password   String
+  permission Permission
+  active     Boolean    @default(true)
+  created_at DateTime   @default(now())
+
+  @@map("employees")
+}
+
+model Client {
+  id         String   @id @default(uuid())
+  company_id String
+  company    Company  @relation(fields: [company_id], references: [id])
+  name       String
+  cpf        String   @unique @db.VarChar(15)
+  phone      String
+  email      String?
+  street     String
+  number     String
+  comp       String?
+  district   String
+  zip_code   String   @db.VarChar(11)
+  city       String
+  state      String   @db.VarChar(2)
+  password   String
+  created_at DateTime @default(now())
+
+  @@map("clients")
+  Order Order[]
+}
+
+enum Calc {
+  marge
+  markup
+}
+
+enum Unity {
+  square_meter
+  meter
+  unity
+  weight
+  liter
+}
+
+model Product {
+  id             String   @id @default(uuid())
+  company_id     String
+  company        Company  @relation(fields: [company_id], references: [id])
+  title          String
+  description    String?
+  sku            String   @unique
+  barcode        String   @unique
+  internal_code  String   @unique
+  calc_price     Calc
+  cost_value     Decimal
+  freight_value  Decimal
+  other_cost     Decimal
+  profit_percent Decimal
+  sale_value     Decimal
+  active         Boolean  @default(true)
+  in_promotion   Boolean  @default(false)
+  thumbnail      String
+  type_unit      Unity
+  unit_desc      String?
+  inventory      Int?
+  weight         Decimal?
+  liter          Decimal?
+  length         Decimal?
+  width          Json?
+  unity          String?
+  details        Json?
+  created_at     DateTime @default(now())
+
+  @@map("products")
+  Image Image[]
+  Tax   Tax[]
+}
+
+model Image {
+  id         String   @id @default(uuid())
+  product_id String
+  product    Product  @relation(fields: [product_id], references: [id])
+  image      String
+  created_at DateTime @default(now())
+
+  @@map("images")
+}
+
+model Tax {
+  id         String   @id @default(uuid())
+  product_id String
+  product    Product  @relation(fields: [product_id], references: [id])
+  ncm        String?
+  cest       String?
+  cfop       String?
+  icms       Json?
+  cofins     Json?
+  pis        Json?
+  ipi        Json?
+  created_at DateTime @default(now())
+
+  @@map("taxes")
+}
+
+model Xml {
+  id         String   @id @default(uuid())
+  nfe_key    String
+  created_at DateTime @default(now())
+
+  @@map("xmls")
+}
+
+enum Payment {
+  wait
+  paid_out
+  refused
+  cancel
+}
+
+enum OrderStatus {
+  awaiting_payment
+  in_separation
+  cancel
+  order_dispatched
+  finish
+}
+
+model Order {
+  id                   String      @id @default(uuid())
+  company_id           String
+  company              Company     @relation(fields: [company_id], references: [id])
+  client_id            String
+  client               Client      @relation(fields: [client_id], references: [id])
+  products             Json
+  total_order          Decimal
+  discount             Decimal
+  total_to_pay         Decimal
+  payment_id           String?
+  payment_method       String?
+  payment_type         String?
+  payment_status       Payment
+  order_status         OrderStatus
+  shipping_code        String?
+  shipping_information String?
+  month                String
+  year                 String
+  created_at           DateTime    @default(now())
+
+  @@map("orders")
+}
+
+model Config {
+  id                           String   @id @default(uuid())
+  company_id                   String
+  company                      Company  @relation(fields: [company_id], references: [id])
+  max_tickets_installments     Int
+  max_card_installments        Int
+  min_value_ticket_installment Int
+  min_value_card_installment   Int
+  invoices                     Boolean?
+  tickets                      Boolean?
+  cards                        Boolean?
+  pix                          Boolean?
+  digital_payment              Boolean?
+  crypto                       Boolean?
+  payment_sdk_key              String?
+  created_at                   DateTime @default(now())
+
+  @@map("configs")
+}
+
+enum PaymentMethod {
+  money
+  credit_card
+  debit_card
+  ticket
+  duplicata
+
+}
+
+model Revenue {
+  id             String        @id @default(uuid())
+  company_id     String
+  company        Company       @relation(fields: [company_id], references: [id])
+  title          String
+  description    String
+  value          Decimal
+  due_date       DateTime
+  payment_method PaymentMethod
+  payment_status Payment
+  month          String
+  year           String
+  created_at     DateTime      @default(now())
+
+  @@map("revenues")
+}
+
+model Expense {
+  id             String        @id @default(uuid())
+  company_id     String
+  company        Company       @relation(fields: [company_id], references: [id])
+  title          String
+  description    String
+  value          Decimal
+  due_date       DateTime
+  payment_method PaymentMethod
+  payment_status Payment
+  month          String
+  year           String
+  created_at     DateTime      @default(now())
+
+  @@map("expenses")
+}
