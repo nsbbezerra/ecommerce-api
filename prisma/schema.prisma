@@ -17,7 +17,7 @@ model Company {
   fantasy_name           String
   municipal_registration String?
   state_registration     String?
-  phone                  String   @db.VarChar(12)
+  phone                  String   @db.VarChar(18)
   email                  String?
   street                 String
   number                 String
@@ -26,9 +26,9 @@ model Company {
   zip_code               String   @db.VarChar(11)
   city                   String
   state                  String   @db.VarChar(2)
-  expires_code_date      DateTime
-  company_code           String   @unique
-  thumbnail              String
+  expires_code_date      DateTime?
+  company_code           String?   @unique
+  thumbnail              String?
   active                 Boolean  @default(true)
   created_at             DateTime @default(now())
 
