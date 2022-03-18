@@ -35,11 +35,14 @@ model Company {
   Employee Employee[]
   Client   Client[]
   Product  Product[]
+  Order    Order[]
+  Config   Config[]
+  Revenue  Revenue[]
+  Expense  Expense[]
   @@map("companies")
-  Order   Order[]
-  Config  Config[]
-  Revenue Revenue[]
-  Expense Expense[]
+  Tag       Tag[]
+  Coupon    Coupon[]
+  Promotion Promotion[]
 }
 
 enum Permission {
@@ -81,8 +84,8 @@ model Client {
   password   String
   created_at DateTime @default(now())
 
-  @@map("clients")
   Order Order[]
+  @@map("clients")
 }
 
 enum Calc {
@@ -125,11 +128,13 @@ model Product {
   width          Json?
   unity          String?
   details        Json?
+  slugs          String[]
+  promotions     String[]
   created_at     DateTime @default(now())
 
-  @@map("products")
   Image Image[]
   Tax   Tax[]
+  @@map("products")
 }
 
 model Image {
@@ -266,4 +271,48 @@ model Expense {
   created_at     DateTime      @default(now())
 
   @@map("expenses")
+}
+
+model Tag {
+  id         String   @id @default(uuid())
+  company_id String
+  company    Company  @relation(fields: [company_id], references: [id])
+  title      String
+  created_at DateTime @default(now())
+
+  @@map("tags")
+}
+
+enum PeriodCoupon {
+  infinite
+  due_date
+  quantity
+}
+
+model Coupon {
+  id           String       @id @default(uuid())
+  company_id   String
+  company      Company      @relation(fields: [company_id], references: [id])
+  coupon       String
+  dicount      Decimal
+  period       PeriodCoupon
+  number_used  Int?
+  expires_date DateTime?
+  created_at   DateTime     @default(now())
+
+  @@map("coupons")
+}
+
+model Promotion {
+  id          String   @id @default(uuid())
+  company_id  String
+  company     Company  @relation(fields: [company_id], references: [id])
+  banner      String?
+  title       String
+  description String?
+  discount    Decimal
+  active      Boolean  @default(true)
+  created_at  DateTime @default(now())
+
+  @@map("promotions")
 }
