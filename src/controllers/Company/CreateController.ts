@@ -86,4 +86,26 @@ export class CreateCompanyController {
       next(error);
     }
   }
+
+  async FindCompanyById(req: CustomProp, res: Response, next: NextFunction) {
+    const { id } = req.params;
+
+    try {
+      const company = await prismaClient.company.findFirst({
+        where: { id },
+      });
+      return res.status(200).json(company);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async FindCompany(req: CustomProp, res: Response, next: NextFunction) {
+    try {
+      const companies = await prismaClient.company.findMany();
+      return res.status(200).json(companies);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

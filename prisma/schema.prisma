@@ -11,38 +11,40 @@ datasource db {
 }
 
 model Company {
-  id                     String   @id @default(uuid())
+  id                     String    @id @default(uuid())
   name                   String
-  cnpj                   String   @unique @db.VarChar(20)
+  cnpj                   String    @unique @db.VarChar(20)
   fantasy_name           String
   municipal_registration String?
   state_registration     String?
-  phone                  String   @db.VarChar(18)
+  phone                  String    @db.VarChar(18)
   email                  String?
   street                 String
   number                 String
   comp                   String?
   district               String
-  zip_code               String   @db.VarChar(11)
+  zip_code               String    @db.VarChar(11)
   city                   String
-  state                  String   @db.VarChar(2)
+  state                  String    @db.VarChar(2)
   expires_code_date      DateTime?
   company_code           String?   @unique
   thumbnail              String?
-  active                 Boolean  @default(true)
-  created_at             DateTime @default(now())
+  active                 Boolean   @default(true)
+  created_at             DateTime  @default(now())
 
-  Employee Employee[]
-  Client   Client[]
-  Product  Product[]
-  Order    Order[]
-  Config   Config[]
-  Revenue  Revenue[]
-  Expense  Expense[]
-  @@map("companies")
+  Employee  Employee[]
+  Client    Client[]
+  Product   Product[]
+  Order     Order[]
+  Config    Config[]
+  Revenue   Revenue[]
+  Expense   Expense[]
   Tag       Tag[]
   Coupon    Coupon[]
   Promotion Promotion[]
+  @@map("companies")
+  Category Category[]
+  SubCat   SubCat[]
 }
 
 enum Permission {
@@ -102,39 +104,43 @@ enum Unity {
 }
 
 model Product {
-  id             String   @id @default(uuid())
-  company_id     String
-  company        Company  @relation(fields: [company_id], references: [id])
-  title          String
-  description    String?
-  sku            String   @unique
-  barcode        String   @unique
-  internal_code  String   @unique
-  calc_price     Calc
-  cost_value     Decimal
-  freight_value  Decimal
-  other_cost     Decimal
-  profit_percent Decimal
-  sale_value     Decimal
-  active         Boolean  @default(true)
-  in_promotion   Boolean  @default(false)
-  thumbnail      String
-  type_unit      Unity
-  unit_desc      String?
-  inventory      Int?
-  weight         Decimal?
-  liter          Decimal?
-  length         Decimal?
-  width          Json?
-  unity          String?
-  details        Json?
-  slugs          String[]
-  promotions     String[]
-  created_at     DateTime @default(now())
+  id              String   @id @default(uuid())
+  company_id      String
+  company         Company  @relation(fields: [company_id], references: [id])
+  category_id     String
+  category        Category @relation(fields: [category_id], references: [id])
+  sub_category_id String
+  sub_category    SubCat   @relation(fields: [sub_category_id], references: [id])
+  title           String
+  description     String?
+  sku             String   @unique
+  barcode         String   @unique
+  internal_code   String   @unique
+  calc_price      Calc
+  cost_value      Decimal
+  freight_value   Decimal
+  other_cost      Decimal
+  profit_percent  Decimal
+  sale_value      Decimal
+  active          Boolean  @default(true)
+  in_promotion    Boolean  @default(false)
+  thumbnail       String
+  type_unit       Unity
+  unit_desc       String?
+  inventory       Int?
+  weight          Decimal?
+  liter           Decimal?
+  length          Decimal?
+  width           Json?
+  unity           String?
+  details         Json?
+  promotions      String[]
+  created_at      DateTime @default(now())
 
   Image Image[]
   Tax   Tax[]
   @@map("products")
+  Slug Slug[]
 }
 
 model Image {
@@ -281,6 +287,7 @@ model Tag {
   created_at DateTime @default(now())
 
   @@map("tags")
+  Slug Slug[]
 }
 
 enum PeriodCoupon {
@@ -315,4 +322,43 @@ model Promotion {
   created_at  DateTime @default(now())
 
   @@map("promotions")
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  company_id  String
+  company     Company  @relation(fields: [company_id], references: [id])
+  title       String
+  description String?
+  active      Boolean  @default(true)
+  icon        String
+  created_at  DateTime @default(now())
+
+  @@map("categories")
+  Product Product[]
+  SubCat  SubCat[]
+}
+
+model SubCat {
+  id          String   @id @default(uuid())
+  company_id  String
+  company     Company  @relation(fields: [company_id], references: [id])
+  category_id String
+  category    Category @relation(fields: [category_id], references: [id])
+  title       String
+  description String?
+  icon        String
+  active      Boolean  @default(true)
+  created_at  DateTime @default(now())
+
+  @@map("sub_categories")
+  Product Product[]
+}
+
+model Slug {
+  id         String  @id @default(uuid())
+  product_id String
+  product    Product @relation(fields: [product_id], references: [id])
+  tag_id     String
+  tag        Tag     @relation(fields: [tag_id], references: [id])
 }
