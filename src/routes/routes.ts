@@ -50,8 +50,8 @@ router.get("/findCompanyById/:id", InsertCompanyController.FindCompanyById);
 router.get("/findCompanies", InsertCompanyController.FindCompany);
 
 /** ------------------- EMPLOYEES ------------------- */
-router.post("/employees", verifyToken, EmployeesController.Store);
-router.post("/employeeNotAuth", EmployeesController.Store);
+router.post("/employees/:company_id", verifyToken, EmployeesController.Store);
+router.post("/employeeNotAuth/:company_id", EmployeesController.Store);
 router.get("/findEmployees/:company_id", verifyToken, EmployeesController.Find);
 router.put(
   "/changeEmployeePermission/:id",

@@ -1,0 +1,128 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de gestão e manipulação de e-commerce criado pela NK Informática",
+    "description": "Esta API gerencia os end-points do sistema global de gestão de e-commerce fornecido pela NK Informática para manipulação de produtos, clientes, empresas, tags, receitas, despesas, pagamentos e etc...",
+    "termosOfService": "http://localhost:3000/termos",
+    "contact": {
+      "email": "contato.nk.info@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4003/v1",
+      "description": "API de testes"
+    },
+    {
+      "url": "http://localhost:4003/v1",
+      "description": "API de produção"
+    }
+  ],
+  "paths": {
+    "/company": {
+      "post": {
+        "summary": "Cadastro de empresas",
+        "description": "Rota para inserção de empresas",
+        "tags": ["Empresa"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Empresa"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Erro na requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "properties": {
+                      "message": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "properties": {
+                      "message": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Empresa": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "cnpj": {
+            "type": "string"
+          },
+          "fantasy_name": {
+            "type": "string"
+          },
+          "municipal_registration": {
+            "type": "string"
+          },
+          "state_registration": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "street": {
+            "type": "string"
+          },
+          "number": {
+            "type": "string"
+          },
+          "comp": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "zip_code": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

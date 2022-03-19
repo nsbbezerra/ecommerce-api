@@ -42,9 +42,9 @@ model Company {
   Tag       Tag[]
   Coupon    Coupon[]
   Promotion Promotion[]
+  Category  Category[]
+  SubCat    SubCat[]
   @@map("companies")
-  Category Category[]
-  SubCat   SubCat[]
 }
 
 enum Permission {
@@ -139,8 +139,8 @@ model Product {
 
   Image Image[]
   Tax   Tax[]
+  Slug  Slug[]
   @@map("products")
-  Slug Slug[]
 }
 
 model Image {
@@ -286,8 +286,8 @@ model Tag {
   title      String
   created_at DateTime @default(now())
 
-  @@map("tags")
   Slug Slug[]
+  @@map("tags")
 }
 
 enum PeriodCoupon {
@@ -334,9 +334,9 @@ model Category {
   icon        String
   created_at  DateTime @default(now())
 
-  @@map("categories")
   Product Product[]
   SubCat  SubCat[]
+  @@map("categories")
 }
 
 model SubCat {
@@ -351,8 +351,8 @@ model SubCat {
   active      Boolean  @default(true)
   created_at  DateTime @default(now())
 
-  @@map("sub_categories")
   Product Product[]
+  @@map("sub_categories")
 }
 
 model Slug {
@@ -361,4 +361,6 @@ model Slug {
   product    Product @relation(fields: [product_id], references: [id])
   tag_id     String
   tag        Tag     @relation(fields: [tag_id], references: [id])
+
+  @@map("slugs")
 }

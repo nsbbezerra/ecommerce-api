@@ -67,6 +67,10 @@ export class EmployeeController {
     const { user, password } = req.body;
 
     try {
+      if (!company_id) {
+        return res.status(400).json({ message: "Empresa não encontrada" });
+      }
+
       const employee = await prismaClient.employee.findFirst({
         where: { company_id, user },
       });
@@ -104,6 +108,15 @@ export class EmployeeController {
     try {
       const employees = await prismaClient.employee.findMany({
         where: { company_id },
+        select: {
+          active: true,
+          company_id: true,
+          id: true,
+          name: true,
+          permission: true,
+          phone: true,
+          user: true,
+        },
       });
       return res.status(200).json(employees);
     } catch (error) {
