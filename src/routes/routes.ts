@@ -11,6 +11,8 @@ const Multer = multer({
 import { CreateCompanyController } from "../controllers/Company/CreateController";
 import { UpdateCompanyController } from "../controllers/Company/UpdateController";
 import { EmployeeController } from "../controllers/Employees/EmployeeController";
+import { RegisterClientController } from "../controllers/Clients/RegisterController";
+import { UpdateClientController } from "../controllers/Clients/UpdateController";
 
 const router = express.Router();
 
@@ -30,6 +32,8 @@ async function verifyToken(req: Request, res: Response, next: NextFunction) {
 const InsertCompanyController = new CreateCompanyController();
 const AlterCompanyController = new UpdateCompanyController();
 const EmployeesController = new EmployeeController();
+const StoreClientController = new RegisterClientController();
+const AlterClientController = new UpdateClientController();
 
 /** -------------------- COMPANY -------------------- */
 router.post("/company", InsertCompanyController.Store);
@@ -60,5 +64,28 @@ router.put(
 );
 router.put("/activeEmployee/:id", verifyToken, EmployeesController.Active);
 router.post("/login/:company_id", EmployeesController.Login);
+
+/** ------------------- CLIENTS --------------------- */
+router.post("/clients/:company_id", verifyToken, StoreClientController.Store);
+router.get("/clients", StoreClientController.Find);
+router.get(
+  "/findClientsByCompany/:company_id",
+  verifyToken,
+  StoreClientController.FindByCompany
+);
+router.get("/findClientsById/:id", verifyToken, StoreClientController.FindById);
+router.put(
+  "/updateClientInfo/:id",
+  verifyToken,
+  AlterClientController.UpdateInfo
+);
+router.put(
+  "/updateClientPassword/:token",
+  AlterClientController.UpdatePassword
+);
+router.post(
+  "/requestUpdatePassword",
+  AlterClientController.RequestUpdatePassword
+);
 
 export { router };
