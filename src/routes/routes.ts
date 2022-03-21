@@ -13,6 +13,8 @@ import { UpdateCompanyController } from "../controllers/Company/UpdateController
 import { EmployeeController } from "../controllers/Employees/EmployeeController";
 import { RegisterClientController } from "../controllers/Clients/RegisterController";
 import { UpdateClientController } from "../controllers/Clients/UpdateController";
+import { CategoriesController } from "../controllers/Categories/CategoriesController";
+import { SubCategoriesController } from "../controllers/SubCategories/SubCategoriesController";
 
 const router = express.Router();
 
@@ -34,6 +36,8 @@ const AlterCompanyController = new UpdateCompanyController();
 const EmployeesController = new EmployeeController();
 const StoreClientController = new RegisterClientController();
 const AlterClientController = new UpdateClientController();
+const CategoryController = new CategoriesController();
+const SubCategoryController = new SubCategoriesController();
 
 /** -------------------- COMPANY -------------------- */
 router.post("/company", InsertCompanyController.Store);
@@ -86,6 +90,33 @@ router.put(
 router.post(
   "/requestUpdatePassword",
   AlterClientController.RequestUpdatePassword
+);
+
+/** -------------------- CATEGORIES ---------------------- */
+router.post("/categories/:company_id", verifyToken, CategoryController.Store);
+router.get("/categories/:company_id", CategoryController.List);
+router.put("/categories/:id", verifyToken, CategoryController.Update);
+router.put("/activeCategory/:id", verifyToken, CategoryController.Active);
+
+/** -------------------- SUB CATEGORIES ------------------ */
+router.post(
+  "/subCategories/:company_id/:category_id",
+  verifyToken,
+  SubCategoryController.Store
+);
+router.get(
+  "/findSubCategoryByCategory/:category_id",
+  SubCategoryController.FindByCategory
+);
+router.get(
+  "/findSubCategoryByCompany/:company_id",
+  SubCategoryController.FindByCompany
+);
+router.put("/subCategories/:id", verifyToken, SubCategoryController.Update);
+router.put(
+  "/subCategoriesActive/:id",
+  verifyToken,
+  SubCategoryController.Active
 );
 
 export { router };
