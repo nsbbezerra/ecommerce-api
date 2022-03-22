@@ -56,6 +56,10 @@ router.put(
 router.put("/activeCompany/:id", AlterCompanyController.ActiveCompany);
 router.get("/findCompanyById/:id", InsertCompanyController.FindCompanyById);
 router.get("/findCompanies", InsertCompanyController.FindCompany);
+router.get(
+  "/findCompanyInformation/:company_id",
+  InsertCompanyController.GetInformation
+);
 
 /** ------------------- EMPLOYEES ------------------- */
 router.post("/employees/:company_id", verifyToken, EmployeesController.Store);

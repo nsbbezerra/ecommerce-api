@@ -108,4 +108,23 @@ export class CreateCompanyController {
       next(error);
     }
   }
+
+  async GetInformation(req: CustomProp, res: Response, next: NextFunction) {
+    const { company_id } = req.params;
+    const { code } = req.body;
+
+    try {
+      const company = await prismaClient.company.findFirst({
+        where: { id: company_id, company_code: code },
+      });
+
+      if (!company) {
+        return res.status(400).json({ message: "Empresa não encontrada" });
+      }
+
+      return res.status(200).json(company);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
