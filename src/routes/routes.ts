@@ -56,7 +56,7 @@ router.put(
 router.put("/activeCompany/:id", AlterCompanyController.ActiveCompany);
 router.get("/findCompanyById/:id", InsertCompanyController.FindCompanyById);
 router.get("/findCompanies", InsertCompanyController.FindCompany);
-router.get(
+router.post(
   "/findCompanyInformation/:company_id",
   InsertCompanyController.GetInformation
 );
