@@ -22,6 +22,7 @@ export class CreateCompanyController {
       zip_code,
       city,
       state,
+      type_activation,
     } = req.body;
 
     try {
@@ -41,6 +42,7 @@ export class CreateCompanyController {
           zip_code,
           city,
           state,
+          type_activation,
         },
       });
       return res

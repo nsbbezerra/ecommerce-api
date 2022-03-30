@@ -93,7 +93,11 @@ export class EmployeeController {
         expiresIn: 36000,
       });
       const information = {
-        user: { id: employee.id, name: employee.name },
+        user: {
+          id: employee.id,
+          name: employee.name,
+          permission: employee.permission,
+        },
         token,
       };
       return res.status(200).json(information);
