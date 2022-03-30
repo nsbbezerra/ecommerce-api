@@ -10,27 +10,34 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum TypeActive {
+  monthly
+  yearly
+  definitive
+}
+
 model Company {
-  id                     String    @id @default(uuid())
+  id                     String     @id @default(uuid())
   name                   String
-  cnpj                   String    @unique @db.VarChar(20)
+  cnpj                   String     @unique @db.VarChar(20)
   fantasy_name           String
   municipal_registration String?
   state_registration     String?
-  phone                  String    @db.VarChar(18)
+  phone                  String     @db.VarChar(18)
   email                  String?
   street                 String
   number                 String
   comp                   String?
   district               String
-  zip_code               String    @db.VarChar(11)
+  zip_code               String     @db.VarChar(11)
   city                   String
-  state                  String    @db.VarChar(2)
+  state                  String     @db.VarChar(2)
   expires_code_date      DateTime?
-  company_code           String?   @unique
+  company_code           String?    @unique
+  type_activation        TypeActive
   thumbnail              String?
-  active                 Boolean   @default(true)
-  created_at             DateTime  @default(now())
+  active                 Boolean    @default(true)
+  created_at             DateTime   @default(now())
 
   Employee         Employee[]
   Product          Product[]
@@ -127,9 +134,7 @@ model Product {
   barcode         String   @unique
   internal_code   String   @unique
   calc_price      Calc
-  cost_value      Decimal
-  freight_value   Decimal
-  other_cost      Decimal
+  cost_value      Json
   profit_percent  Decimal
   sale_value      Decimal
   active          Boolean  @default(true)
@@ -145,12 +150,13 @@ model Product {
   unity           String?
   details         Json?
   promotions      String[]
+  taxes           Json?
   created_at      DateTime @default(now())
 
   Image           Image[]
-  Tax             Tax[]
   Slug            Slug[]
   AddictionalItem AddictionalItem[]
+  Assets          Assets[]
   @@map("products")
 }
 
@@ -164,20 +170,14 @@ model Image {
   @@map("images")
 }
 
-model Tax {
+model Assets {
   id         String   @id @default(uuid())
   product_id String
   product    Product  @relation(fields: [product_id], references: [id])
-  ncm        String?
-  cest       String?
-  cfop       String?
-  icms       Json?
-  cofins     Json?
-  pis        Json?
-  ipi        Json?
+  file       String
   created_at DateTime @default(now())
 
-  @@map("taxes")
+  @@map("assets")
 }
 
 model Xml {
@@ -253,7 +253,6 @@ enum PaymentMethod {
   debit_card
   ticket
   duplicata
-
 }
 
 model Revenue {
