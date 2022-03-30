@@ -17,27 +17,28 @@ enum TypeActive {
 }
 
 model Company {
-  id                     String     @id @default(uuid())
+  id                     String      @id @default(uuid())
   name                   String
-  cnpj                   String     @unique @db.VarChar(20)
+  cnpj                   String      @unique @db.VarChar(20)
   fantasy_name           String
   municipal_registration String?
   state_registration     String?
-  phone                  String     @db.VarChar(18)
+  phone                  String      @db.VarChar(18)
   email                  String?
   street                 String
   number                 String
   comp                   String?
   district               String
-  zip_code               String     @db.VarChar(11)
+  zip_code               String      @db.VarChar(11)
   city                   String
-  state                  String     @db.VarChar(2)
+  state                  String      @db.VarChar(2)
   expires_code_date      DateTime?
-  company_code           String?    @unique
-  type_activation        TypeActive
+  company_code           String?     @unique
+  type_activation        TypeActive?
   thumbnail              String?
-  active                 Boolean    @default(true)
-  created_at             DateTime   @default(now())
+  thumbnail_id           String?
+  active                 Boolean     @default(true)
+  created_at             DateTime    @default(now())
 
   Employee         Employee[]
   Product          Product[]
@@ -139,7 +140,8 @@ model Product {
   sale_value      Decimal
   active          Boolean  @default(true)
   in_promotion    Boolean  @default(false)
-  thumbnail       String
+  thumbnail       String?
+  thumbnail_id    String?
   type_unit       Unity
   unit_desc       String?
   inventory       Int?
@@ -165,6 +167,7 @@ model Image {
   product_id String
   product    Product  @relation(fields: [product_id], references: [id])
   image      String
+  image_id   String
   created_at DateTime @default(now())
 
   @@map("images")
@@ -175,6 +178,7 @@ model Assets {
   product_id String
   product    Product  @relation(fields: [product_id], references: [id])
   file       String
+  file_id    String
   created_at DateTime @default(now())
 
   @@map("assets")

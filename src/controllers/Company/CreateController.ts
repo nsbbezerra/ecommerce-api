@@ -76,7 +76,6 @@ export class CreateCompanyController {
     const { id } = req.params;
 
     try {
-      console.log(firebaseUrl);
       await prismaClient.company.update({
         where: { id },
         data: { thumbnail: firebaseUrl },

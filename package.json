@@ -28,7 +28,7 @@
     "swagger-ui-express": "^4.3.0"
   },
   "scripts": {
-    "start": "tsnd --transpile-only --respawn --ignore-watch node_modules src/server.ts",
+    "dev": "tsnd --transpile-only --respawn --exit-child --ignore-watch node_modules src/server.ts",
     "publish": "tsc --build",
     "serve": "node build/server.js"
   }

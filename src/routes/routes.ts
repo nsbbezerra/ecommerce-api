@@ -48,7 +48,12 @@ router.put(
   upload,
   InsertCompanyController.UpdateThumbnail
 );
-router.put("/updateCompanyInfo/:id", AlterCompanyController.UpdateInfo);
+router.put(
+  "/updateCompanyInfo/:id",
+  verifyToken,
+  AlterCompanyController.UpdateInfo
+);
+router.put("/updateCompanyInfoAuth/:id", AlterCompanyController.UpdateInfo);
 router.put(
   "/changeCompanyExpiresCode/:id",
   AlterCompanyController.UpdateExpiresDate
