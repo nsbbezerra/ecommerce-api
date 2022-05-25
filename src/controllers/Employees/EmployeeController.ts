@@ -121,6 +121,7 @@ export class EmployeeController {
           phone: true,
           user: true,
         },
+        orderBy: { name: "asc" },
       });
       return res.status(200).json(employees);
     } catch (error) {
