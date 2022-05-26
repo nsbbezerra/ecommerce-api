@@ -102,7 +102,6 @@ export class RegisterClientController {
       const clients = await prismaClient.clientsCompanies.findMany({
         where: { company_id },
         select: {
-          company: true,
           client: {
             select: {
               name: true,

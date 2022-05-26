@@ -80,7 +80,7 @@ router.post("/login/:company_id", EmployeesController.Login);
 router.put("/changeAuthInfo/:id", verifyToken, EmployeesController.UpdateAuth);
 
 /** ------------------- CLIENTS --------------------- */
-router.post("/clients/:company_id", verifyToken, StoreClientController.Store);
+router.post("/clients/:company_id", StoreClientController.Store);
 router.get("/clients", StoreClientController.Find);
 router.get(
   "/findClientsByCompany/:company_id",
