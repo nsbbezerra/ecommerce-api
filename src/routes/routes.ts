@@ -77,6 +77,7 @@ router.put(
 );
 router.put("/activeEmployee/:id", verifyToken, EmployeesController.Active);
 router.post("/login/:company_id", EmployeesController.Login);
+router.put("/changeAuthInfo/:id", verifyToken, EmployeesController.UpdateAuth);
 
 /** ------------------- CLIENTS --------------------- */
 router.post("/clients/:company_id", verifyToken, StoreClientController.Store);

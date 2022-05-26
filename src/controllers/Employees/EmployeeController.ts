@@ -128,4 +128,22 @@ export class EmployeeController {
       next(error);
     }
   }
+
+  async UpdateAuth(req: Request, res: Response, next: NextFunction) {
+    const { user, password } = req.body;
+    const { id } = req.params;
+    const hash = await bcrypt.hash(password, 10);
+
+    try {
+      await prismaClient.employee.update({
+        where: { id },
+        data: { user, password: hash },
+      });
+      return res
+        .status(201)
+        .json({ message: "Alteração concluída com sucesso" });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
