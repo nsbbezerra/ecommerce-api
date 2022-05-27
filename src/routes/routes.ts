@@ -106,6 +106,11 @@ router.post(
 router.post("/categories/:company_id", verifyToken, CategoryController.Store);
 router.get("/categories/:company_id", CategoryController.List);
 router.put("/categories/:id", verifyToken, CategoryController.Update);
+router.put(
+  "/updateIconCategory/:id",
+  verifyToken,
+  CategoryController.UpdateIcon
+);
 router.put("/activeCategory/:id", verifyToken, CategoryController.Active);
 
 /** -------------------- SUB CATEGORIES ------------------ */

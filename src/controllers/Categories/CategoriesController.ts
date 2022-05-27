@@ -26,12 +26,29 @@ export class CategoriesController {
 
   async Update(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
-    const { title, description, icon } = req.body;
+    const { description, title } = req.body;
 
     try {
       await prismaClient.category.update({
         where: { id },
-        data: { title, description, icon },
+        data: { description, title },
+      });
+      return res
+        .status(201)
+        .json({ message: "As informações foram alteradas com sucesso" });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async UpdateIcon(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    const { icon } = req.body;
+
+    try {
+      await prismaClient.category.update({
+        where: { id },
+        data: { icon },
       });
       return res
         .status(201)
