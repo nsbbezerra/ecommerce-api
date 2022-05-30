@@ -30,6 +30,18 @@ export class SubCategoriesController {
     try {
       const sub_categories = await prismaClient.subCat.findMany({
         where: { company_id },
+        select: {
+          category: {
+            select: {
+              title: true,
+            },
+          },
+          title: true,
+          description: true,
+          icon: true,
+          active: true,
+          id: true,
+        },
         orderBy: { title: "asc" },
       });
       return res.status(200).json(sub_categories);
@@ -54,7 +66,7 @@ export class SubCategoriesController {
 
   async Update(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
-    const { title, description, icon } = req.body;
+    const { title, description } = req.body;
 
     try {
       await prismaClient.subCat.update({
@@ -62,7 +74,25 @@ export class SubCategoriesController {
         data: {
           title,
           description,
-          icon,
+        },
+      });
+      return res
+        .status(201)
+        .json({ message: "As alterações foram concluídas com sucesso" });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async UpdateIcon(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    const { icon } = req.body;
+
+    try {
+      await prismaClient.subCat.update({
+        where: { id },
+        data: {
+          icon: icon,
         },
       });
       return res

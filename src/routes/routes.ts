@@ -129,6 +129,11 @@ router.get(
 );
 router.put("/subCategories/:id", verifyToken, SubCategoryController.Update);
 router.put(
+  "/updateSubCategoriesIcon/:id",
+  verifyToken,
+  SubCategoryController.UpdateIcon
+);
+router.put(
   "/subCategoriesActive/:id",
   verifyToken,
   SubCategoryController.Active
