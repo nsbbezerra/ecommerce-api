@@ -46,7 +46,6 @@ model Company {
   Config           Config[]
   Revenue          Revenue[]
   Expense          Expense[]
-  Tag              Tag[]
   Coupon           Coupon[]
   Promotion        Promotion[]
   Category         Category[]
@@ -152,11 +151,11 @@ model Product {
   unity           String?
   details         Json?
   promotions      String[]
+  tags            String[]
   taxes           Json?
   created_at      DateTime @default(now())
 
   Image           Image[]
-  Slug            Slug[]
   AddictionalItem AddictionalItem[]
   Assets          Assets[]
   @@map("products")
@@ -293,17 +292,6 @@ model Expense {
   @@map("expenses")
 }
 
-model Tag {
-  id         String   @id @default(uuid())
-  company_id String
-  company    Company  @relation(fields: [company_id], references: [id])
-  title      String
-  created_at DateTime @default(now())
-
-  Slug Slug[]
-  @@map("tags")
-}
-
 enum PeriodCoupon {
   infinite
   due_date
@@ -367,17 +355,6 @@ model SubCat {
 
   Product Product[]
   @@map("sub_categories")
-}
-
-model Slug {
-  id         String   @id @default(uuid())
-  product_id String
-  product    Product  @relation(fields: [product_id], references: [id])
-  tag_id     String
-  tag        Tag      @relation(fields: [tag_id], references: [id])
-  created_at DateTime @default(now())
-
-  @@map("slugs")
 }
 
 model AddictionalItem {
