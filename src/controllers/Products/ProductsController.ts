@@ -34,6 +34,7 @@ export class ProductController {
       taxes,
       tags,
       thumbnail,
+      shipping,
     } = req.body;
 
     try {
@@ -64,6 +65,7 @@ export class ProductController {
           taxes,
           tags,
           thumbnail,
+          shipping,
         },
       });
       return res
@@ -115,6 +117,7 @@ export class ProductController {
       unity,
       details,
       tags,
+      shipping,
     } = req.body;
 
     try {
@@ -141,6 +144,7 @@ export class ProductController {
           unity,
           details,
           tags,
+          shipping,
         },
       });
 
