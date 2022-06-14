@@ -121,41 +121,66 @@ enum Unity {
 }
 
 model Product {
-  id              String   @id @default(uuid())
-  company_id      String
-  company         Company  @relation(fields: [company_id], references: [id])
-  category_id     String
-  category        Category @relation(fields: [category_id], references: [id])
-  sub_category_id String
-  sub_category    SubCat   @relation(fields: [sub_category_id], references: [id])
-  title           String
-  description     String?
-  sku             String   @unique
-  barcode         String   @unique
-  internal_code   String   @unique
-  calc_price      Calc
-  cost_value      Json
-  profit_percent  Decimal
-  markup_factor   Decimal
-  sale_value      Decimal
-  active          Boolean  @default(true)
-  in_promotion    Boolean  @default(false)
-  thumbnail       String?
-  thumbnail_id    String?
-  type_unit       Unity
-  unit_desc       String?
-  inventory       Int?
-  weight          Decimal?
-  liter           Decimal?
-  length          Decimal?
-  width           Json?
-  shipping        Json?
-  unity           String?
-  details         String?
-  promotions      String[]
-  tags            String[]
-  taxes           Json?
-  created_at      DateTime @default(now())
+  id                     String   @id @default(uuid())
+  company_id             String
+  company                Company  @relation(fields: [company_id], references: [id])
+  category_id            String
+  category               Category @relation(fields: [category_id], references: [id])
+  sub_category_id        String
+  sub_category           SubCat   @relation(fields: [sub_category_id], references: [id])
+  title                  String
+  description            String?
+  sku                    String   @unique
+  barcode                String   @unique
+  internal_code          String   @unique
+  calc_price             Calc
+  cost_value             Json
+  profit_percent         Decimal
+  markup_factor          Decimal
+  sale_value             Decimal
+  active                 Boolean  @default(true)
+  in_promotion           Boolean  @default(false)
+  thumbnail              String?
+  thumbnail_id           String?
+  type_unit              Unity
+  unit_desc              String?
+  inventory              Int?
+  weight                 Decimal?
+  liter                  Decimal?
+  length                 Decimal?
+  width                  Json?
+  shipping               Json?
+  unity                  String?
+  details                String?
+  promotions             String[]
+  tags                   String[]
+  cfop                   String?
+  ncm                    String?
+  icms_rate              Decimal?
+  icms_origin            String?
+  icms_csosn             String?
+  icms_st_rate           Decimal?
+  icms_marg_val_agregate Decimal?
+  icms_st_mod_bc         String?
+  icms_base_calc         Decimal?
+  imcs_st_base_calc      Decimal?
+  fcp_rate               Decimal?
+  fcp_st_rate            Decimal?
+  fcp_ret_rate           Decimal?
+  fcp_base_calc          Decimal?
+  fcp_st_base_calc       Decimal?
+  ipi_cst                String?
+  ipi_rate               Decimal?
+  ipi_code               String?
+  pis_cst                String?
+  pis_rate               Decimal?
+  pis_base_calc          Decimal?
+  cofins_cst             String?
+  cofins_rate            Decimal?
+  cofins_base_calc       Decimal?
+  cest                   String?
+  isTributed             Boolean
+  created_at             DateTime @default(now())
 
   Image           Image[]
   AddictionalItem AddictionalItem[]
