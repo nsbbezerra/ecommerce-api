@@ -16,6 +16,7 @@ import { UpdateClientController } from "../controllers/Clients/UpdateController"
 import { CategoriesController } from "../controllers/Categories/CategoriesController";
 import { SubCategoriesController } from "../controllers/SubCategories/SubCategoriesController";
 import { ProductController } from "../controllers/Products/ProductsController";
+import { ShippingController } from "../controllers/Shipping/ShippingController";
 
 const router = express.Router();
 
@@ -40,6 +41,7 @@ const AlterClientController = new UpdateClientController();
 const CategoryController = new CategoriesController();
 const SubCategoryController = new SubCategoriesController();
 const ProductsController = new ProductController();
+const ShippingControl = new ShippingController();
 
 /** -------------------- COMPANY -------------------- */
 router.post("/company", InsertCompanyController.Store);
@@ -153,5 +155,8 @@ router.put(
 router.put("/products/:id", verifyToken, ProductsController.UpdateInfo);
 router.put("/productsActive/:id", verifyToken, ProductsController.Active);
 router.put("/productsTaxes/:id", verifyToken, ProductsController.UpdateTaxes);
+
+/** ------------------------- SHIPPING ----------------------- */
+router.post("/shipping", ShippingControl.FindPrice);
 
 export { router };
