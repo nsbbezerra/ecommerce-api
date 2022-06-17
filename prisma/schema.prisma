@@ -135,9 +135,9 @@ model Product {
   internal_code          String   @unique
   calc_price             Calc
   cost_value             Json
-  profit_percent         Decimal
-  markup_factor          Decimal
-  sale_value             Decimal
+  profit_percent         Decimal  @db.Decimal(10,2)
+  markup_factor          Decimal  @db.Decimal(10,2)
+  sale_value             Decimal  @db.Decimal(10,2)
   active                 Boolean  @default(true)
   in_promotion           Boolean  @default(false)
   thumbnail              String?
@@ -145,9 +145,9 @@ model Product {
   type_unit              Unity
   unit_desc              String?
   inventory              Int?
-  weight                 Decimal?
-  liter                  Decimal?
-  length                 Decimal?
+  weight                 Decimal? @db.Decimal(10,2)
+  liter                  Decimal? @db.Decimal(10,2)
+  length                 Decimal? @db.Decimal(10,2)
   width                  Json?
   shipping               Json?
   unity                  String?
