@@ -32,7 +32,6 @@ export class ProductController {
       unity,
       details,
       tags,
-      thumbnail,
       shipping,
       cfop,
       ncm,
@@ -80,10 +79,10 @@ export class ProductController {
           sale_value,
           type_unit,
           unit_desc,
-          inventory,
-          weight,
-          liter,
-          length,
+          inventory: parseInt(inventory),
+          weight: parseFloat(weight),
+          liter: parseFloat(liter),
+          length: parseFloat(length),
           width,
           unity,
           details,
@@ -113,7 +112,6 @@ export class ProductController {
           cofins_base_calc,
           cest,
           tags,
-          thumbnail,
           shipping,
           isTributed,
         },
@@ -300,6 +298,46 @@ export class ProductController {
         where: { company_id: id },
       });
       return res.status(201).json(products);
+    } catch (error) {
+      next(error);
+    }
+  }
+  async FindCategories(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+
+    try {
+      const categories = await prismaClient.category.findMany({
+        where: { active: true, company_id: id },
+        select: {
+          id: true,
+          title: true,
+        },
+        orderBy: {
+          title: "asc",
+        },
+      });
+      return res.status(200).json(categories);
+    } catch (error) {
+      next(error);
+    }
+  }
+  async FindSubCategories(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+
+    try {
+      const subCategories = await prismaClient.subCat.findMany({
+        where: {
+          category_id: id,
+        },
+        select: {
+          id: true,
+          title: true,
+        },
+        orderBy: {
+          title: "asc",
+        },
+      });
+      return res.status(200).json(subCategories);
     } catch (error) {
       next(error);
     }

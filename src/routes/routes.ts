@@ -155,6 +155,16 @@ router.put(
 router.put("/products/:id", verifyToken, ProductsController.UpdateInfo);
 router.put("/productsActive/:id", verifyToken, ProductsController.Active);
 router.put("/productsTaxes/:id", verifyToken, ProductsController.UpdateTaxes);
+router.get(
+  "/showCategoriesByProduct/:id",
+  verifyToken,
+  ProductsController.FindCategories
+);
+router.get(
+  "/showSubCategoriesProduct/:id",
+  verifyToken,
+  ProductsController.FindSubCategories
+);
 
 /** ------------------------- SHIPPING ----------------------- */
 router.post("/shipping", ShippingControl.FindPrice);

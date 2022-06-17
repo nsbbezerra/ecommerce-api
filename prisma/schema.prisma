@@ -131,7 +131,7 @@ model Product {
   title                  String
   description            String?
   sku                    String   @unique
-  barcode                String   @unique
+  barcode                String
   internal_code          String   @unique
   calc_price             Calc
   cost_value             Json
@@ -156,28 +156,28 @@ model Product {
   tags                   String[]
   cfop                   String?
   ncm                    String?
-  icms_rate              Decimal?
+  icms_rate              String?
   icms_origin            String?
   icms_csosn             String?
-  icms_st_rate           Decimal?
-  icms_marg_val_agregate Decimal?
+  icms_st_rate           String?
+  icms_marg_val_agregate String?
   icms_st_mod_bc         String?
-  icms_base_calc         Decimal?
-  imcs_st_base_calc      Decimal?
-  fcp_rate               Decimal?
-  fcp_st_rate            Decimal?
-  fcp_ret_rate           Decimal?
-  fcp_base_calc          Decimal?
-  fcp_st_base_calc       Decimal?
+  icms_base_calc         String?
+  imcs_st_base_calc      String?
+  fcp_rate               String?
+  fcp_st_rate            String?
+  fcp_ret_rate           String?
+  fcp_base_calc          String?
+  fcp_st_base_calc       String?
   ipi_cst                String?
-  ipi_rate               Decimal?
+  ipi_rate               String?
   ipi_code               String?
   pis_cst                String?
-  pis_rate               Decimal?
-  pis_base_calc          Decimal?
+  pis_rate               String?
+  pis_base_calc          String?
   cofins_cst             String?
-  cofins_rate            Decimal?
-  cofins_base_calc       Decimal?
+  cofins_rate            String?
+  cofins_base_calc       String?
   cest                   String?
   isTributed             Boolean
   created_at             DateTime @default(now())
