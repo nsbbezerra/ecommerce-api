@@ -295,6 +295,22 @@ export class ProductController {
     try {
       const products = await prismaClient.product.findMany({
         orderBy: { title: "asc" },
+        select: {
+          id: true,
+          thumbnail: true,
+          title: true,
+          sku: true,
+          sale_value: true,
+          active: true,
+          in_promotion: true,
+          type_unit: true,
+          unit_desc: true,
+          inventory: true,
+          weight: true,
+          liter: true,
+          length: true,
+          isTributed: true,
+        },
         where: { company_id: id },
       });
       return res.status(201).json(products);
