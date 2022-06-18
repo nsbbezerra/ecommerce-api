@@ -342,4 +342,29 @@ export class ProductController {
       next(error);
     }
   }
+  async StoreImages(req: CustomProp, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    const { firebaseUrl } = req;
+    try {
+      await prismaClient.image.create({
+        data: {
+          product_id: id,
+          image: firebaseUrl || "",
+          image_id: "none",
+        },
+      });
+
+      const images = await prismaClient.image.findMany({
+        where: { product_id: id },
+        select: { id: true, image: true },
+        orderBy: { created_at: "asc" },
+      });
+
+      return res
+        .status(201)
+        .json({ message: "Imagem inserida com sucesso", images });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

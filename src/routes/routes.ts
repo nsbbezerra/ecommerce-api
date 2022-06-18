@@ -165,6 +165,12 @@ router.get(
   verifyToken,
   ProductsController.FindSubCategories
 );
+router.post(
+  "/storeImagesProduct/:id",
+  Multer.single("image"),
+  upload,
+  ProductsController.StoreImages
+);
 
 /** ------------------------- SHIPPING ----------------------- */
 router.post("/shipping", ShippingControl.FindPrice);
