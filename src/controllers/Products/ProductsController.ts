@@ -59,6 +59,9 @@ export class ProductController {
       cofins_base_calc,
       cest,
       isTributed,
+      type_sale,
+      sale_options,
+      sale_options_category,
     } = req.body;
 
     try {
@@ -114,6 +117,9 @@ export class ProductController {
           tags,
           shipping,
           isTributed,
+          type_sale,
+          sale_options,
+          sale_options_category,
         },
       });
       return res
@@ -310,6 +316,7 @@ export class ProductController {
           liter: true,
           length: true,
           isTributed: true,
+          type_sale: true,
         },
         where: { company_id: id },
       });

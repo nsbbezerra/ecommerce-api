@@ -40,17 +40,19 @@ model Company {
   active                 Boolean     @default(true)
   created_at             DateTime    @default(now())
 
-  Employee         Employee[]
-  Product          Product[]
-  Order            Order[]
-  Config           Config[]
-  Revenue          Revenue[]
-  Expense          Expense[]
-  Coupon           Coupon[]
-  Promotion        Promotion[]
-  Category         Category[]
-  SubCat           SubCat[]
-  ClientsCompanies ClientsCompanies[]
+  Employee              Employee[]
+  Product               Product[]
+  Order                 Order[]
+  Config                Config[]
+  Revenue               Revenue[]
+  Expense               Expense[]
+  Coupon                Coupon[]
+  Promotion             Promotion[]
+  Category              Category[]
+  SubCat                SubCat[]
+  ClientsCompanies      ClientsCompanies[]
+  PartitionSale         PartitionSale[]
+  PartitionSaleCategory PartitionSaleCategory[]
   @@map("companies")
 }
 
@@ -118,36 +120,45 @@ enum Unity {
   unity
   weight
   liter
+  without
+}
+
+enum TypeSale {
+  unique
+  partition
 }
 
 model Product {
-  id                     String   @id @default(uuid())
+  id                     String    @id @default(uuid())
   company_id             String
-  company                Company  @relation(fields: [company_id], references: [id])
+  company                Company   @relation(fields: [company_id], references: [id])
   category_id            String
-  category               Category @relation(fields: [category_id], references: [id])
+  category               Category  @relation(fields: [category_id], references: [id])
   sub_category_id        String
-  sub_category           SubCat   @relation(fields: [sub_category_id], references: [id])
+  sub_category           SubCat    @relation(fields: [sub_category_id], references: [id])
   title                  String
   description            String?
-  sku                    String   @unique
+  sku                    String    @unique
   barcode                String
-  internal_code          String   @unique
+  internal_code          String    @unique
   calc_price             Calc
   cost_value             Json
-  profit_percent         Decimal  @db.Decimal(10,2)
-  markup_factor          Decimal  @db.Decimal(10,2)
-  sale_value             Decimal  @db.Decimal(10,2)
-  active                 Boolean  @default(true)
-  in_promotion           Boolean  @default(false)
+  profit_percent         Decimal   @db.Decimal(10, 2)
+  markup_factor          Decimal   @db.Decimal(10, 2)
+  sale_value             Decimal   @db.Decimal(10, 2)
+  type_sale              TypeSale?
+  sale_options           Int?
+  sale_options_category  String?
+  active                 Boolean   @default(true)
+  in_promotion           Boolean   @default(false)
   thumbnail              String?
   thumbnail_id           String?
   type_unit              Unity
   unit_desc              String?
   inventory              Int?
-  weight                 Decimal? @db.Decimal(10,2)
-  liter                  Decimal? @db.Decimal(10,2)
-  length                 Decimal? @db.Decimal(10,2)
+  weight                 Decimal?  @db.Decimal(10, 2)
+  liter                  Decimal?  @db.Decimal(10, 2)
+  length                 Decimal?  @db.Decimal(10, 2)
   width                  Json?
   shipping               Json?
   unity                  String?
@@ -180,11 +191,11 @@ model Product {
   cofins_base_calc       String?
   cest                   String?
   isTributed             Boolean
-  created_at             DateTime @default(now())
+  created_at             DateTime  @default(now())
 
   Image           Image[]
   AddictionalItem AddictionalItem[]
-  Assets          Assets[]
+  Assets          Assets[]  
   @@map("products")
 }
 
@@ -240,9 +251,9 @@ model Order {
   client_id            String
   client               Client      @relation(fields: [client_id], references: [id])
   products             Json
-  total_order          Decimal @db.Decimal(10,2)
-  discount             Decimal @db.Decimal(10,2)
-  total_to_pay         Decimal @db.Decimal(10,2)
+  total_order          Decimal     @db.Decimal(10, 2)
+  discount             Decimal     @db.Decimal(10, 2)
+  total_to_pay         Decimal     @db.Decimal(10, 2)
   payment_id           String?
   payment_method       String?
   payment_type         String?
@@ -291,7 +302,7 @@ model Revenue {
   company        Company       @relation(fields: [company_id], references: [id])
   title          String
   description    String
-  value          Decimal @db.Decimal(10,2)
+  value          Decimal       @db.Decimal(10, 2)
   due_date       DateTime
   payment_method PaymentMethod
   payment_status Payment
@@ -308,7 +319,7 @@ model Expense {
   company        Company       @relation(fields: [company_id], references: [id])
   title          String
   description    String
-  value          Decimal @db.Decimal(10,2)
+  value          Decimal       @db.Decimal(10, 2)
   due_date       DateTime
   payment_method PaymentMethod
   payment_status Payment
@@ -330,7 +341,7 @@ model Coupon {
   company_id   String
   company      Company      @relation(fields: [company_id], references: [id])
   coupon       String
-  dicount      Decimal @db.Decimal(10,2)
+  dicount      Decimal      @db.Decimal(10, 2)
   period       PeriodCoupon
   number_used  Int?
   expires_date DateTime?
@@ -346,7 +357,7 @@ model Promotion {
   banner      String?
   title       String
   description String?
-  discount    Decimal @db.Decimal(10,2)
+  discount    Decimal  @db.Decimal(10, 2)
   active      Boolean  @default(true)
   created_at  DateTime @default(now())
 
@@ -389,9 +400,34 @@ model AddictionalItem {
   product_id String
   product    Product  @relation(fields: [product_id], references: [id])
   name       String
-  value      Decimal @db.Decimal(10,2)
+  value      Decimal  @db.Decimal(10, 2)
   active     Boolean  @default(true)
   created_at DateTime @default(now())
 
   @@map("addictional_items")
+}
+
+model PartitionSaleCategory {
+  id         String   @id @default(uuid())
+  company_id String
+  company    Company  @relation(fields: [company_id], references: [id])
+  name       String
+  created_at DateTime @default(now())
+
+  PartitionSale PartitionSale[]
+  @@map("partition_sale_category")
+}
+
+model PartitionSale {
+  id                         String                @id @default(uuid())
+  partition_sale_category_id String
+  partition_sale_category    PartitionSaleCategory @relation(fields: [partition_sale_category_id], references: [id])
+  name                       String
+  value                      Decimal               @db.Decimal(10, 2)
+  active                     Boolean               @default(true)
+  created_at                 DateTime              @default(now())
+
+  Company   Company? @relation(fields: [companyId], references: [id])
+  companyId String?
+  @@map("partition_sale")  
 }

@@ -17,6 +17,7 @@ import { CategoriesController } from "../controllers/Categories/CategoriesContro
 import { SubCategoriesController } from "../controllers/SubCategories/SubCategoriesController";
 import { ProductController } from "../controllers/Products/ProductsController";
 import { ShippingController } from "../controllers/Shipping/ShippingController";
+import { PartitioSaleController } from "../controllers/PartitionSale/PartitionSaleController";
 
 const router = express.Router();
 
@@ -42,6 +43,7 @@ const CategoryController = new CategoriesController();
 const SubCategoryController = new SubCategoriesController();
 const ProductsController = new ProductController();
 const ShippingControl = new ShippingController();
+const PartitionSaleControl = new PartitioSaleController();
 
 /** -------------------- COMPANY -------------------- */
 router.post("/company", InsertCompanyController.Store);
@@ -174,5 +176,19 @@ router.post(
 
 /** ------------------------- SHIPPING ----------------------- */
 router.post("/shipping", ShippingControl.FindPrice);
+
+/** ------------------------ PARTITION SALE ----------------- */
+router.post(
+  "/storeCategoryPartitionSale/:id",
+  verifyToken,
+  PartitionSaleControl.StoreCategory
+);
+router.post(
+  "/storeItemsPartitionSale/:id",
+  verifyToken,
+  PartitionSaleControl.StorePartitionItens
+);
+router.get("/showCategoryPartitionSale/:id", PartitionSaleControl.ShowCategory);
+router.get("/showItemsPartitionSale/:id", PartitionSaleControl.ShowItems);
 
 export { router };
