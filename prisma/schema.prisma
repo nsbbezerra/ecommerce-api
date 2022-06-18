@@ -147,7 +147,7 @@ model Product {
   markup_factor          Decimal   @db.Decimal(10, 2)
   sale_value             Decimal   @db.Decimal(10, 2)
   type_sale              TypeSale?
-  sale_options           Int?
+  sale_options           String?
   sale_options_category  String?
   active                 Boolean   @default(true)
   in_promotion           Boolean   @default(false)

@@ -18,6 +18,7 @@ import { SubCategoriesController } from "../controllers/SubCategories/SubCategor
 import { ProductController } from "../controllers/Products/ProductsController";
 import { ShippingController } from "../controllers/Shipping/ShippingController";
 import { PartitioSaleController } from "../controllers/PartitionSale/PartitionSaleController";
+import { AdictionalItemsController } from "../controllers/AdictionalItems/AdictionalItemsController";
 
 const router = express.Router();
 
@@ -44,6 +45,7 @@ const SubCategoryController = new SubCategoriesController();
 const ProductsController = new ProductController();
 const ShippingControl = new ShippingController();
 const PartitionSaleControl = new PartitioSaleController();
+const AdictionalControl = new AdictionalItemsController();
 
 /** -------------------- COMPANY -------------------- */
 router.post("/company", InsertCompanyController.Store);
@@ -190,5 +192,13 @@ router.post(
 );
 router.get("/showCategoryPartitionSale/:id", PartitionSaleControl.ShowCategory);
 router.get("/showItemsPartitionSale/:id", PartitionSaleControl.ShowItems);
+router.delete(
+  "/deleteItemPartition/:id",
+  verifyToken,
+  PartitionSaleControl.DeleteItems
+);
+
+/** ----------------------------- ADICTIONAL ITEMS ---------------------- */
+router.post("/adictionalItems/:id", verifyToken, AdictionalControl.Store);
 
 export { router };

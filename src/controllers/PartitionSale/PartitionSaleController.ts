@@ -71,4 +71,18 @@ export class PartitioSaleController {
       next(error);
     }
   }
+  async DeleteItems(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+
+    try {
+      await prismaClient.partitionSale.delete({
+        where: { id },
+      });
+      return res
+        .status(201)
+        .json({ message: "Informação excluída com sucesso" });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

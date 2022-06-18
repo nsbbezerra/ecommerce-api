@@ -64,6 +64,8 @@ export class ProductController {
       sale_options_category,
     } = req.body;
 
+    console.log(inventory);
+
     try {
       const product = await prismaClient.product.create({
         data: {
@@ -82,10 +84,10 @@ export class ProductController {
           sale_value,
           type_unit,
           unit_desc,
-          inventory: parseInt(inventory),
-          weight: parseFloat(weight),
-          liter: parseFloat(liter),
-          length: parseFloat(length),
+          inventory: !inventory ? 0 : parseInt(inventory),
+          weight: !weight ? 0 : parseFloat(weight),
+          liter: !liter ? 0 : parseFloat(liter),
+          length: !length ? 0 : parseFloat(length),
           width,
           unity,
           details,
