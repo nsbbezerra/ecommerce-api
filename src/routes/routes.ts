@@ -19,6 +19,7 @@ import { ProductController } from "../controllers/Products/ProductsController";
 import { ShippingController } from "../controllers/Shipping/ShippingController";
 import { PartitioSaleController } from "../controllers/PartitionSale/PartitionSaleController";
 import { AdictionalItemsController } from "../controllers/AdictionalItems/AdictionalItemsController";
+import { ListProductsController } from "../controllers/Products/ListProductsController";
 
 const router = express.Router();
 
@@ -46,6 +47,7 @@ const ProductsController = new ProductController();
 const ShippingControl = new ShippingController();
 const PartitionSaleControl = new PartitioSaleController();
 const AdictionalControl = new AdictionalItemsController();
+const ProductListControl = new ListProductsController();
 
 /** -------------------- COMPANY -------------------- */
 router.post("/company", InsertCompanyController.Store);
@@ -175,6 +177,7 @@ router.post(
   upload,
   ProductsController.StoreImages
 );
+router.get("/findTaxesProduct/:id", ProductListControl.ListTaxes);
 
 /** ------------------------- SHIPPING ----------------------- */
 router.post("/shipping", ShippingControl.FindPrice);

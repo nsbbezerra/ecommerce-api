@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { prismaClient } from "../../../database/prisma";
-import { configs } from "../../configs";
 
 interface CustomProp extends Request {
   firebaseUrl?: string;
@@ -63,8 +62,6 @@ export class ProductController {
       sale_options,
       sale_options_category,
     } = req.body;
-
-    console.log(inventory);
 
     try {
       const product = await prismaClient.product.create({
