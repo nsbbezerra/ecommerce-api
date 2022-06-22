@@ -152,11 +152,21 @@ router.put(
 /** ------------------------ PRODUCTS -------------------------- */
 router.get("/products/:id", ProductsController.ShowByCompany);
 router.post("/products/:company_id", verifyToken, ProductsController.Store);
+router.post(
+  "/storeProductTaxes/:id",
+  verifyToken,
+  ProductsController.StoreTaxes
+);
 router.put(
   "/productsThumbnail/:id",
   Multer.single("thumbnail"),
   upload,
   ProductsController.Thumbnail
+);
+router.put(
+  "/updateProductTax/:id/:product_id",
+  verifyToken,
+  ProductsController.UpdateTaxes
 );
 router.put("/products/:id", verifyToken, ProductsController.UpdateInfo);
 router.put("/productsActive/:id", verifyToken, ProductsController.Active);

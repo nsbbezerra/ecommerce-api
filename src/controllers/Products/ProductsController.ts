@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { application, NextFunction, Request, Response } from "express";
 import { prismaClient } from "../../../database/prisma";
 
 interface CustomProp extends Request {
@@ -32,32 +32,6 @@ export class ProductController {
       details,
       tags,
       shipping,
-      cfop,
-      ncm,
-      icms_rate,
-      icms_origin,
-      icms_csosn,
-      icms_st_rate,
-      icms_marg_val_agregate,
-      icms_st_mod_bc,
-      icms_base_calc,
-      imcs_st_base_calc,
-      fcp_rate,
-      fcp_st_rate,
-      fcp_ret_rate,
-      fcp_base_calc,
-      fcp_st_base_calc,
-      ipi_cst,
-      ipi_rate,
-      ipi_code,
-      pis_cst,
-      pis_rate,
-      pis_base_calc,
-      cofins_cst,
-      cofins_rate,
-      cofins_base_calc,
-      cest,
-      isTributed,
       type_sale,
       sale_options,
       sale_options_category,
@@ -88,6 +62,55 @@ export class ProductController {
           width,
           unity,
           details,
+          tags,
+          shipping,
+          type_sale,
+          sale_options,
+          sale_options_category,
+        },
+      });
+      return res
+        .status(201)
+        .json({ message: "Informações inseridas com sucesso", product });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async StoreTaxes(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    const {
+      cfop,
+      ncm,
+      icms_rate,
+      icms_origin,
+      icms_csosn,
+      icms_st_rate,
+      icms_marg_val_agregate,
+      icms_st_mod_bc,
+      icms_base_calc,
+      imcs_st_base_calc,
+      fcp_rate,
+      fcp_st_rate,
+      fcp_ret_rate,
+      fcp_base_calc,
+      fcp_st_base_calc,
+      ipi_cst,
+      ipi_rate,
+      ipi_code,
+      pis_cst,
+      pis_rate,
+      pis_base_calc,
+      cofins_cst,
+      cofins_rate,
+      cofins_base_calc,
+      cest,
+      isTributed,
+    } = req.body;
+
+    try {
+      await prismaClient.taxes.create({
+        data: {
+          product_id: id,
           cfop,
           ncm,
           icms_rate,
@@ -113,17 +136,12 @@ export class ProductController {
           cofins_rate,
           cofins_base_calc,
           cest,
-          tags,
-          shipping,
           isTributed,
-          type_sale,
-          sale_options,
-          sale_options_category,
         },
       });
       return res
         .status(201)
-        .json({ message: "Informações inseridas com sucesso", product });
+        .json({ message: "Informações salvas com sucesso" });
     } catch (error) {
       next(error);
     }
@@ -225,7 +243,7 @@ export class ProductController {
     }
   }
   async UpdateTaxes(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params;
+    const { id, product_id } = req.params;
     const {
       cfop,
       ncm,
@@ -256,37 +274,75 @@ export class ProductController {
     } = req.body;
 
     try {
-      await prismaClient.product.update({
-        where: { id },
-        data: {
-          cfop,
-          ncm,
-          icms_rate,
-          icms_origin,
-          icms_csosn,
-          icms_st_rate,
-          icms_marg_val_agregate,
-          icms_st_mod_bc,
-          icms_base_calc,
-          imcs_st_base_calc,
-          fcp_rate,
-          fcp_st_rate,
-          fcp_ret_rate,
-          fcp_base_calc,
-          fcp_st_base_calc,
-          ipi_cst,
-          ipi_rate,
-          ipi_code,
-          pis_cst,
-          pis_rate,
-          pis_base_calc,
-          cofins_cst,
-          cofins_rate,
-          cofins_base_calc,
-          cest,
-          isTributed,
-        },
+      const findTax = await prismaClient.taxes.findFirst({
+        where: { id: id },
       });
+
+      if (findTax) {
+        await prismaClient.taxes.update({
+          where: { id: id },
+          data: {
+            cfop,
+            ncm,
+            icms_rate,
+            icms_origin,
+            icms_csosn,
+            icms_st_rate,
+            icms_marg_val_agregate,
+            icms_st_mod_bc,
+            icms_base_calc,
+            imcs_st_base_calc,
+            fcp_rate,
+            fcp_st_rate,
+            fcp_ret_rate,
+            fcp_base_calc,
+            fcp_st_base_calc,
+            ipi_cst,
+            ipi_rate,
+            ipi_code,
+            pis_cst,
+            pis_rate,
+            pis_base_calc,
+            cofins_cst,
+            cofins_rate,
+            cofins_base_calc,
+            cest,
+            isTributed,
+          },
+        });
+      } else {
+        await prismaClient.taxes.create({
+          data: {
+            product_id,
+            cfop,
+            ncm,
+            icms_rate,
+            icms_origin,
+            icms_csosn,
+            icms_st_rate,
+            icms_marg_val_agregate,
+            icms_st_mod_bc,
+            icms_base_calc,
+            imcs_st_base_calc,
+            fcp_rate,
+            fcp_st_rate,
+            fcp_ret_rate,
+            fcp_base_calc,
+            fcp_st_base_calc,
+            ipi_cst,
+            ipi_rate,
+            ipi_code,
+            pis_cst,
+            pis_rate,
+            pis_base_calc,
+            cofins_cst,
+            cofins_rate,
+            cofins_base_calc,
+            cest,
+            isTributed,
+          },
+        });
+      }
       return res
         .status(201)
         .json({ message: "Informações alteradas com sucesso" });
@@ -314,7 +370,6 @@ export class ProductController {
           weight: true,
           liter: true,
           length: true,
-          isTributed: true,
           type_sale: true,
         },
         where: { company_id: id },

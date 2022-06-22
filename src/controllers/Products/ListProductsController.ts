@@ -6,8 +6,8 @@ export class ListProductsController {
     const { id } = req.params;
 
     try {
-      const product = await prismaClient.product.findFirst({
-        where: { id },
+      const product = await prismaClient.taxes.findFirst({
+        where: { product_id: id },
         select: {
           id: true,
           cfop: true,
