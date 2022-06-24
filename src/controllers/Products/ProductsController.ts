@@ -1,4 +1,4 @@
-import { application, NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { prismaClient } from "../../../database/prisma";
 
 interface CustomProp extends Request {
@@ -173,22 +173,20 @@ export class ProductController {
       sku,
       barcode,
       internal_code,
-      calc_price,
-      markup_factor,
-      cost_value,
-      profit_percent,
-      sale_value,
       type_unit,
       unit_desc,
-      inventory,
+      details,
+      cost_value,
+      type_sale,
+      sale_options,
+      sale_options_category,
       weight,
       liter,
       length,
       width,
-      unity,
-      details,
-      tags,
+      inventory,
       shipping,
+      sale_value,
     } = req.body;
 
     try {
@@ -200,22 +198,20 @@ export class ProductController {
           sku,
           barcode,
           internal_code,
-          calc_price,
-          markup_factor,
-          cost_value,
-          profit_percent,
-          sale_value,
           type_unit,
           unit_desc,
-          inventory,
-          weight,
-          liter,
-          length,
-          width,
-          unity,
           details,
-          tags,
+          cost_value,
+          type_sale,
+          sale_options,
+          sale_options_category,
+          inventory: !inventory ? 0 : parseInt(inventory),
+          weight: !weight ? 0 : parseFloat(weight),
+          liter: !liter ? 0 : parseFloat(liter),
+          length: !length ? 0 : parseFloat(length),
+          width,
           shipping,
+          sale_value,
         },
       });
 
