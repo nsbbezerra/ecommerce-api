@@ -188,6 +188,7 @@ router.post(
   ProductsController.StoreImages
 );
 router.get("/findTaxesProduct/:id", ProductListControl.ListTaxes);
+router.get("/listProductInformation/:id", ProductListControl.ListInfo);
 
 /** ------------------------- SHIPPING ----------------------- */
 router.post("/shipping", ShippingControl.FindPrice);

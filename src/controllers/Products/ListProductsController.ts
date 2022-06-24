@@ -43,4 +43,36 @@ export class ListProductsController {
       next(error);
     }
   }
+  async ListInfo(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+
+    try {
+      const product = await prismaClient.product.findFirst({
+        where: { id },
+        select: {
+          title: true,
+          description: true,
+          sku: true,
+          barcode: true,
+          internal_code: true,
+          type_unit: true,
+          unit_desc: true,
+          details: true,
+          cost_value: true,
+          type_sale: true,
+          sale_options: true,
+          sale_options_category: true,
+          weight: true,
+          liter: true,
+          length: true,
+          width: true,
+          inventory: true,
+          shipping: true,
+        },
+      });
+      return res.status(200).json(product);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
