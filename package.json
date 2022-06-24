@@ -17,6 +17,8 @@
     "typescript": "^4.6.2"
   },
   "dependencies": {
+    "@firebase/app": "^0.7.27",
+    "@firebase/storage": "^0.9.8",
     "@prisma/client": "3.10.0",
     "bcrypt": "^5.0.1",
     "correios-brasil": "^3.0.0",

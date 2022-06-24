@@ -4,6 +4,7 @@ import private_key from "../configs/private_key.json";
 
 interface CustomProp extends Request {
   firebaseUrl?: string;
+  firebaseId?: string;
 }
 
 admin.initializeApp({
@@ -37,9 +38,10 @@ const upload = (req: CustomProp, res: Response, next: NextFunction) => {
   stream.on("finish", async () => {
     await file.makePublic();
     req.firebaseUrl = file.publicUrl();
+    req.firebaseId = file.id;
     next();
   });
   stream.end(image?.buffer);
 };
 
-export { upload };
+export { upload, bucket };

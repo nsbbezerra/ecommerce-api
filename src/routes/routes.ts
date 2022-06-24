@@ -75,6 +75,11 @@ router.post(
   "/findCompanyInformation/:company_id",
   InsertCompanyController.GetInformation
 );
+router.put(
+  "/deleteThumbnailCompany/:id",
+  verifyToken,
+  AlterCompanyController.RemoveThumbnail
+);
 
 /** ------------------- EMPLOYEES ------------------- */
 router.post("/employees/:company_id", verifyToken, EmployeesController.Store);
@@ -189,6 +194,7 @@ router.post(
 );
 router.get("/findTaxesProduct/:id", ProductListControl.ListTaxes);
 router.get("/listProductInformation/:id", ProductListControl.ListInfo);
+router.put("/deleteThumbnail/:id", ProductListControl.DeleteThumbnail);
 
 /** ------------------------- SHIPPING ----------------------- */
 router.post("/shipping", ShippingControl.FindPrice);

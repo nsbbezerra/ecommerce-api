@@ -3,6 +3,7 @@ import { prismaClient } from "../../../database/prisma";
 
 interface CustomProp extends Request {
   firebaseUrl?: string;
+  firebaseId?: string;
 }
 
 export class CreateCompanyController {
@@ -72,13 +73,13 @@ export class CreateCompanyController {
   }
 
   async UpdateThumbnail(req: CustomProp, res: Response, next: NextFunction) {
-    const { firebaseUrl } = req;
+    const { firebaseUrl, firebaseId } = req;
     const { id } = req.params;
 
     try {
       await prismaClient.company.update({
         where: { id },
-        data: { thumbnail: firebaseUrl },
+        data: { thumbnail: firebaseUrl, thumbnail_id: firebaseId },
       });
       return res
         .status(201)

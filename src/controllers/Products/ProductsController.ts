@@ -3,6 +3,7 @@ import { prismaClient } from "../../../database/prisma";
 
 interface CustomProp extends Request {
   firebaseUrl?: string;
+  firebaseId?: string;
 }
 
 export class ProductController {
@@ -147,7 +148,7 @@ export class ProductController {
     }
   }
   async Thumbnail(req: CustomProp, res: Response, next: NextFunction) {
-    const { firebaseUrl } = req;
+    const { firebaseUrl, firebaseId } = req;
     const { id } = req.params;
 
     try {
@@ -155,6 +156,7 @@ export class ProductController {
         where: { id },
         data: {
           thumbnail: firebaseUrl,
+          thumbnail_id: firebaseId,
         },
       });
 
@@ -417,13 +419,13 @@ export class ProductController {
   }
   async StoreImages(req: CustomProp, res: Response, next: NextFunction) {
     const { id } = req.params;
-    const { firebaseUrl } = req;
+    const { firebaseUrl, firebaseId } = req;
     try {
       await prismaClient.image.create({
         data: {
           product_id: id,
           image: firebaseUrl || "",
-          image_id: "none",
+          image_id: firebaseId || "",
         },
       });
 

@@ -1,5 +1,16 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, response, Response } from "express";
 import { prismaClient } from "../../../database/prisma";
+import { bucket } from "../../services/firebase";
+
+async function deleteThumb(id: string) {
+  await prismaClient.product.update({
+    where: { id },
+    data: {
+      thumbnail: "",
+      thumbnail_id: "",
+    },
+  });
+}
 
 export class ListProductsController {
   async ListTaxes(req: Request, res: Response, next: NextFunction) {
@@ -71,6 +82,27 @@ export class ListProductsController {
         },
       });
       return res.status(200).json(product);
+    } catch (error) {
+      next(error);
+    }
+  }
+  async DeleteThumbnail(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    try {
+      const files = bucket.file(name).delete();
+
+      files
+        .then(() => {
+          deleteThumb(id);
+          return res
+            .status(200)
+            .json({ message: "Imagem excluída com sucesso" });
+        })
+        .catch((err) => {
+          next(err);
+        });
     } catch (error) {
       next(error);
     }
