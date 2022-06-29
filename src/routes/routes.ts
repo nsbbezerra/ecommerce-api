@@ -195,6 +195,11 @@ router.post(
 router.get("/findTaxesProduct/:id", ProductListControl.ListTaxes);
 router.get("/listProductInformation/:id", ProductListControl.ListInfo);
 router.put("/deleteThumbnail/:id", ProductListControl.DeleteThumbnail);
+router.put(
+  "/setAdicionalItems/:id",
+  verifyToken,
+  ProductsController.AddAdictionalItems
+);
 
 /** ------------------------- SHIPPING ----------------------- */
 router.post("/shipping", ShippingControl.FindPrice);
@@ -220,5 +225,23 @@ router.delete(
 
 /** ----------------------------- ADICTIONAL ITEMS ---------------------- */
 router.post("/adictionalItems/:id", verifyToken, AdictionalControl.Store);
+router.post(
+  "/adicionalItemsCategory/:company_id",
+  verifyToken,
+  AdictionalControl.StoreCategory
+);
+router.get(
+  "/adictionalItems/:addictional_item_category_id",
+  AdictionalControl.FindAdictionalItems
+);
+router.get(
+  "/categoryAdictionalItems/:company_id",
+  AdictionalControl.FindCategories
+);
+router.delete(
+  "/deleteAdictionalItems/:id",
+  verifyToken,
+  AdictionalControl.DeleteAdicionalItems
+);
 
 export { router };

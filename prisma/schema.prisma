@@ -40,21 +40,21 @@ model Company {
   active                 Boolean     @default(true)
   created_at             DateTime    @default(now())
 
-  Employee              Employee[]
-  Product               Product[]
-  Order                 Order[]
-  Config                Config[]
-  Revenue               Revenue[]
-  Expense               Expense[]
-  Coupon                Coupon[]
-  Promotion             Promotion[]
-  Category              Category[]
-  SubCat                SubCat[]
-  ClientsCompanies      ClientsCompanies[]
-  PartitionSale         PartitionSale[]
-  PartitionSaleCategory PartitionSaleCategory[]
-  @@map("companies")
+  Employee                Employee[]
+  Product                 Product[]
+  Order                   Order[]
+  Config                  Config[]
+  Revenue                 Revenue[]
+  Expense                 Expense[]
+  Coupon                  Coupon[]
+  Promotion               Promotion[]
+  Category                Category[]
+  SubCat                  SubCat[]
+  ClientsCompanies        ClientsCompanies[]
+  PartitionSale           PartitionSale[]
+  PartitionSaleCategory   PartitionSaleCategory[]
   AddictionalItemCategory AddictionalItemCategory[]
+  @@map("companies")
 }
 
 enum Permission {
@@ -166,6 +166,7 @@ model Product {
   details               String?
   promotions            String[]
   tags                  String[]
+  adictional_items_id   String?
   created_at            DateTime  @default(now())
 
   Image  Image[]
@@ -410,11 +411,11 @@ model AddictionalItemCategory {
   id         String   @id @default(uuid())
   title      String
   company_id String
-  company    Company  @relation(fields: [company_id], references: [id])  
+  company    Company  @relation(fields: [company_id], references: [id])
   created_at DateTime @default(now())
 
-  @@map("addictional_items_category")
   AddictionalItem AddictionalItem[]
+  @@map("addictional_items_category")
 }
 
 model AddictionalItem {

@@ -442,4 +442,24 @@ export class ProductController {
       next(error);
     }
   }
+  async AddAdictionalItems(req: CustomProp, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    const { adictional } = req.body;
+
+    try {
+      await prismaClient.product.update({
+        where: {
+          id,
+        },
+        data: {
+          adictional_items_id: adictional,
+        },
+      });
+      return res
+        .status(201)
+        .json({ message: "Informação inserida com sucesso" });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
