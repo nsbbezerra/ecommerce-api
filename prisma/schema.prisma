@@ -122,6 +122,7 @@ enum Unity {
   weight
   liter
   without
+  sizes
 }
 
 enum TypeSale {
@@ -156,10 +157,7 @@ model Product {
   thumbnail_id          String?
   type_unit             Unity
   unit_desc             String?
-  inventory             Int?
-  weight                Decimal?  @db.Decimal(10, 2)
-  liter                 Decimal?  @db.Decimal(10, 2)
-  length                Decimal?  @db.Decimal(10, 2)
+  inventory             Decimal?  @db.Decimal(10, 2)  
   width                 Json?
   shipping              Json?
   unity                 String?
@@ -173,6 +171,17 @@ model Product {
   Assets Assets[]
   Taxes  Taxes[]
   @@map("products")
+  Sizes Sizes[]
+}
+
+model Sizes {
+  id          String   @id @default(uuid())
+  product_id  String
+  product     Product  @relation(fields: [product_id], references: [id])
+  description String
+  inventory   Int
+  created_at  DateTime @default(now())
+  @@map("sizes")
 }
 
 model Taxes {

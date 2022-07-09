@@ -20,6 +20,7 @@ import { ShippingController } from "../controllers/Shipping/ShippingController";
 import { PartitioSaleController } from "../controllers/PartitionSale/PartitionSaleController";
 import { AdictionalItemsController } from "../controllers/AdictionalItems/AdictionalItemsController";
 import { ListProductsController } from "../controllers/Products/ListProductsController";
+import { SizesController } from "../controllers/Sizes/SizesController";
 
 const router = express.Router();
 
@@ -48,6 +49,7 @@ const ShippingControl = new ShippingController();
 const PartitionSaleControl = new PartitioSaleController();
 const AdictionalControl = new AdictionalItemsController();
 const ProductListControl = new ListProductsController();
+const SizesControl = new SizesController();
 
 /** -------------------- COMPANY -------------------- */
 router.post("/company", InsertCompanyController.Store);
@@ -243,5 +245,12 @@ router.delete(
   verifyToken,
   AdictionalControl.DeleteAdicionalItems
 );
+
+/** --------------------------- SIZES --------------------------- */
+router.get("/findSizes/:product_id", SizesControl.Find);
+router.post("/sizes", verifyToken, SizesControl.Store);
+router.put("/sizes/:id", verifyToken, SizesControl.Update);
+router.delete("/sizes/:id", verifyToken, SizesControl.Delete);
+router.put("/updateSizes/:id", verifyToken, SizesControl.UpdateInventory);
 
 export { router };
