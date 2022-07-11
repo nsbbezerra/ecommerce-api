@@ -12,6 +12,12 @@ async function deleteThumb(id: string) {
   });
 }
 
+async function deleteImage(id: string) {
+  await prismaClient.image.delete({
+    where: { id },
+  });
+}
+
 export class ListProductsController {
   async ListTaxes(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
@@ -93,6 +99,49 @@ export class ListProductsController {
       files
         .then(() => {
           deleteThumb(id);
+          return res
+            .status(200)
+            .json({ message: "Imagem excluída com sucesso" });
+        })
+        .catch((err) => {
+          next(err);
+        });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async FindImages(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+
+    try {
+      const thumbnail = await prismaClient.product.findFirst({
+        where: { id },
+        select: {
+          thumbnail: true,
+          thumbnail_id: true,
+        },
+      });
+
+      const images = await prismaClient.image.findMany({
+        where: { product_id: id },
+      });
+
+      let info = { thumbnail, images };
+
+      return res.status(200).json(info);
+    } catch (error) {
+      next(error);
+    }
+  }
+  async DeleteImage(req: Request, res: Response, next: NextFunction) {
+    const { id, name } = req.params;
+
+    try {
+      const files = bucket.file(name).delete();
+
+      files
+        .then(() => {
+          deleteImage(id);
           return res
             .status(200)
             .json({ message: "Imagem excluída com sucesso" });

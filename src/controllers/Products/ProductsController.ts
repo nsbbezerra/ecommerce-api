@@ -154,9 +154,12 @@ export class ProductController {
         },
       });
 
+      const url = firebaseUrl;
+      const url_id = firebaseId;
+
       return res
         .status(201)
-        .json({ message: "Informação inserida com sucesso" });
+        .json({ message: "Informação inserida com sucesso", url, url_id });
     } catch (error) {
       next(error);
     }
@@ -430,7 +433,7 @@ export class ProductController {
   }
   async AddAdictionalItems(req: CustomProp, res: Response, next: NextFunction) {
     const { id } = req.params;
-    const { adictional } = req.body;
+    const { adictional, have_adictional } = req.body;
 
     try {
       await prismaClient.product.update({
@@ -439,6 +442,7 @@ export class ProductController {
         },
         data: {
           adictional_items_id: adictional,
+          have_adictional,
         },
       });
       return res

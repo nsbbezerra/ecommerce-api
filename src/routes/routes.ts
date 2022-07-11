@@ -202,6 +202,8 @@ router.put(
   verifyToken,
   ProductsController.AddAdictionalItems
 );
+router.get("/findProductsImage/:id", ProductListControl.FindImages);
+router.delete("/deleteProductImage/:id/:name", ProductListControl.DeleteImage);
 
 /** ------------------------- SHIPPING ----------------------- */
 router.post("/shipping", ShippingControl.FindPrice);
