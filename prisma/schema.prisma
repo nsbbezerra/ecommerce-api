@@ -55,6 +55,7 @@ model Company {
   PartitionSaleCategory   PartitionSaleCategory[]
   AddictionalItemCategory AddictionalItemCategory[]
   @@map("companies")
+  PayForms PayForms[]
 }
 
 enum Permission {
@@ -316,6 +317,7 @@ enum PaymentMethod {
   debit_card
   ticket
   duplicata
+  pix
 }
 
 model Revenue {
@@ -465,4 +467,19 @@ model PartitionSale {
   Company   Company? @relation(fields: [companyId], references: [id])
   companyId String?
   @@map("partition_sale")
+}
+
+model PayForms {
+  id              String        @id @default(uuid())
+  company_id      String
+  company         Company       @relation(fields: [company_id], references: [id])
+  name            String
+  tag             PaymentMethod
+  is_installments Boolean
+  installments    Int
+  interval_days   String
+  active          Boolean       @default(true)
+  created_at      DateTime      @default(now())
+
+  @@map("pay_forms")
 }

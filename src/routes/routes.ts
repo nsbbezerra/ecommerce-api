@@ -23,6 +23,7 @@ import { ListProductsController } from "../controllers/Products/ListProductsCont
 import { SizesController } from "../controllers/Sizes/SizesController";
 import { PromotionsController } from "../controllers/Promotions/PromotionsController";
 import { CouponsController } from "../controllers/Coupons/CouponsController";
+import { PayFormController } from "../controllers/PayForm/PayFormController";
 
 const router = express.Router();
 
@@ -54,6 +55,7 @@ const ProductListControl = new ListProductsController();
 const SizesControl = new SizesController();
 const PromotionControl = new PromotionsController();
 const CouponsControll = new CouponsController();
+const PayFormControll = new PayFormController();
 
 /** -------------------- COMPANY -------------------- */
 router.post("/company", InsertCompanyController.Store);
@@ -304,5 +306,11 @@ router.put(
 router.get("/coupons/:company_id", CouponsControll.Find);
 router.post("/coupons/:company_id", verifyToken, CouponsControll.Store);
 router.delete("/coupons/:id", verifyToken, CouponsControll.DeleteCoupon);
+
+/** ------------------------------- PAY FORM -------------------------- */
+router.get("/pay_form/:company_id", PayFormControll.Find);
+router.post("/pay_form/:company_id", verifyToken, PayFormControll.Store);
+router.put("/pay_form/:id", verifyToken, PayFormControll.Update);
+router.put("/pay_form_active/:id", verifyToken, PayFormControll.Active);
 
 export { router };
