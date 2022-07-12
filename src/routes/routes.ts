@@ -22,6 +22,7 @@ import { AdictionalItemsController } from "../controllers/AdictionalItems/Adicti
 import { ListProductsController } from "../controllers/Products/ListProductsController";
 import { SizesController } from "../controllers/Sizes/SizesController";
 import { PromotionsController } from "../controllers/Promotions/PromotionsController";
+import { CouponsController } from "../controllers/Coupons/CouponsController";
 
 const router = express.Router();
 
@@ -52,6 +53,7 @@ const AdictionalControl = new AdictionalItemsController();
 const ProductListControl = new ListProductsController();
 const SizesControl = new SizesController();
 const PromotionControl = new PromotionsController();
+const CouponsControll = new CouponsController();
 
 /** -------------------- COMPANY -------------------- */
 router.post("/company", InsertCompanyController.Store);
@@ -229,6 +231,16 @@ router.delete(
   verifyToken,
   PartitionSaleControl.DeleteItems
 );
+router.put(
+  "/updatePartitionCategory/:id",
+  verifyToken,
+  PartitionSaleControl.UpdateCategory
+);
+router.put(
+  "/updatePartitionItem/:id",
+  verifyToken,
+  PartitionSaleControl.UpdateItems
+);
 
 /** ----------------------------- ADICTIONAL ITEMS ---------------------- */
 router.post("/adictionalItems/:id", verifyToken, AdictionalControl.Store);
@@ -249,6 +261,16 @@ router.delete(
   "/deleteAdictionalItems/:id",
   verifyToken,
   AdictionalControl.DeleteAdicionalItems
+);
+router.put(
+  "/editAdicionalItemsCategory/:id",
+  verifyToken,
+  AdictionalControl.EditCategories
+);
+router.put(
+  "/editAdicionalItems/:id",
+  verifyToken,
+  AdictionalControl.EditAdicionalItem
 );
 
 /** --------------------------- SIZES --------------------------- */
@@ -277,5 +299,10 @@ router.put(
   verifyToken,
   PromotionControl.SetPromotional
 );
+
+/** --------------------------------- COUPONS ------------------------- */
+router.get("/coupons/:company_id", CouponsControll.Find);
+router.post("/coupons/:company_id", verifyToken, CouponsControll.Store);
+router.delete("/coupons/:id", verifyToken, CouponsControll.DeleteCoupon);
 
 export { router };

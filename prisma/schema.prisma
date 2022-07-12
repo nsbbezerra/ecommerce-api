@@ -367,6 +367,7 @@ model Coupon {
   period       PeriodCoupon
   number_used  Int?
   expires_date DateTime?
+  active       Boolean      @default(true)
   created_at   DateTime     @default(now())
 
   @@map("coupons")

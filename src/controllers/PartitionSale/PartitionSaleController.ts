@@ -18,6 +18,24 @@ export class PartitioSaleController {
       next(error);
     }
   }
+  async UpdateCategory(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    try {
+      await prismaClient.partitionSaleCategory.update({
+        where: { id },
+        data: {
+          name,
+        },
+      });
+      return res
+        .status(201)
+        .json({ message: "Informações editadas com sucesso" });
+    } catch (error) {
+      next(error);
+    }
+  }
   async StorePartitionItens(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
     const { name, value } = req.body;
@@ -40,6 +58,25 @@ export class PartitioSaleController {
       return res
         .status(201)
         .json({ message: "Informação inserida com sucesso", partition_items });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async UpdateItems(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    const { name, value } = req.body;
+
+    try {
+      await prismaClient.partitionSale.update({
+        where: { id },
+        data: {
+          name,
+          value: !value ? 0 : parseFloat(value),
+        },
+      });
+      return res
+        .status(201)
+        .json({ message: "Informações atualizadas com sucesso" });
     } catch (error) {
       next(error);
     }

@@ -27,6 +27,25 @@ export class AdictionalItemsController {
       next(error);
     }
   }
+  async EditAdicionalItem(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    const { name, value } = req.body;
+
+    try {
+      await prismaClient.addictionalItem.update({
+        where: { id },
+        data: {
+          name,
+          value: !value ? 0 : parseFloat(value),
+        },
+      });
+      return res
+        .status(201)
+        .json({ message: "Informações alteradas com sucesso" });
+    } catch (error) {
+      next(error);
+    }
+  }
   async StoreCategory(req: Request, res: Response, next: NextFunction) {
     const { company_id } = req.params;
     const { title } = req.body;
@@ -55,6 +74,24 @@ export class AdictionalItemsController {
       });
 
       return res.status(200).json(categories);
+    } catch (error) {
+      next(error);
+    }
+  }
+  async EditCategories(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    const { title } = req.body;
+
+    try {
+      await prismaClient.addictionalItemCategory.update({
+        where: { id },
+        data: {
+          title,
+        },
+      });
+      return res
+        .status(201)
+        .json({ message: "Informações alteradas com sucesso" });
     } catch (error) {
       next(error);
     }
