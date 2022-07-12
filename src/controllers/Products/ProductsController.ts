@@ -358,6 +358,8 @@ export class ProductController {
           inventory: true,
           type_sale: true,
           width: true,
+          promotions: true,
+          profit_percent: true,
         },
         where: { company_id: id },
       });
@@ -441,7 +443,7 @@ export class ProductController {
           id,
         },
         data: {
-          adictional_items_id: adictional,
+          adictional_items_id: have_adictional === true ? adictional : "",
           have_adictional,
         },
       });

@@ -162,7 +162,7 @@ model Product {
   shipping              Json?
   unity                 String?
   details               String?
-  promotions            String[]
+  promotions            String?
   tags                  String[]
   have_adictional       Boolean   @default(false)
   adictional_items_id   String?
@@ -378,7 +378,7 @@ model Promotion {
   company     Company  @relation(fields: [company_id], references: [id])
   banner      String?
   banner_id   String?
-  title       String
+  title       String   @unique
   description String?
   discount    Decimal  @db.Decimal(10, 2)
   active      Boolean  @default(true)

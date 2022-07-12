@@ -153,4 +153,20 @@ export class ListProductsController {
       next(error);
     }
   }
+  async FindAdicionalItems(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+
+    try {
+      const adictional = await prismaClient.product.findFirst({
+        where: { id },
+        select: {
+          have_adictional: true,
+          adictional_items_id: true,
+        },
+      });
+      return res.status(200).json(adictional);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

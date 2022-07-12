@@ -21,6 +21,7 @@ import { PartitioSaleController } from "../controllers/PartitionSale/PartitionSa
 import { AdictionalItemsController } from "../controllers/AdictionalItems/AdictionalItemsController";
 import { ListProductsController } from "../controllers/Products/ListProductsController";
 import { SizesController } from "../controllers/Sizes/SizesController";
+import { PromotionsController } from "../controllers/Promotions/PromotionsController";
 
 const router = express.Router();
 
@@ -50,6 +51,7 @@ const PartitionSaleControl = new PartitioSaleController();
 const AdictionalControl = new AdictionalItemsController();
 const ProductListControl = new ListProductsController();
 const SizesControl = new SizesController();
+const PromotionControl = new PromotionsController();
 
 /** -------------------- COMPANY -------------------- */
 router.post("/company", InsertCompanyController.Store);
@@ -204,6 +206,7 @@ router.put(
 );
 router.get("/findProductsImage/:id", ProductListControl.FindImages);
 router.delete("/deleteProductImage/:id/:name", ProductListControl.DeleteImage);
+router.get("/findAdicionalItems/:id", ProductListControl.FindAdicionalItems);
 
 /** ------------------------- SHIPPING ----------------------- */
 router.post("/shipping", ShippingControl.FindPrice);
@@ -254,5 +257,25 @@ router.post("/sizes", verifyToken, SizesControl.Store);
 router.put("/sizes/:id", verifyToken, SizesControl.Update);
 router.delete("/sizes/:id", verifyToken, SizesControl.Delete);
 router.put("/updateSizes/:id", verifyToken, SizesControl.UpdateInventory);
+
+/** ---------------------------- PROMOTIONS ------------------------- */
+router.post(
+  "/promotions/:company_id",
+  Multer.single("banner"),
+  upload,
+  PromotionControl.Store
+);
+router.get("/promotions/:company_id", PromotionControl.GetPromotions);
+router.put("/promotionsUpdate/:id", verifyToken, PromotionControl.UpdateInfo);
+router.put(
+  "/deletePromotions/:id/:name",
+  verifyToken,
+  PromotionControl.DeletePromotion
+);
+router.put(
+  "/setPromotionalProduct/:id",
+  verifyToken,
+  PromotionControl.SetPromotional
+);
 
 export { router };
