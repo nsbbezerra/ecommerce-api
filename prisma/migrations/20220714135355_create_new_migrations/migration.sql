@@ -8,7 +8,7 @@ CREATE TYPE "Permission" AS ENUM ('all', 'cashier', 'seller');
 CREATE TYPE "Calc" AS ENUM ('marge', 'markup');
 
 -- CreateEnum
-CREATE TYPE "Unity" AS ENUM ('square_meter', 'meter', 'unity', 'weight', 'liter', 'without');
+CREATE TYPE "Unity" AS ENUM ('square_meter', 'meter', 'unity', 'weight', 'liter', 'without', 'sizes');
 
 -- CreateEnum
 CREATE TYPE "TypeSale" AS ENUM ('unique', 'partition');
@@ -20,7 +20,7 @@ CREATE TYPE "Payment" AS ENUM ('wait', 'paid_out', 'refused', 'cancel');
 CREATE TYPE "OrderStatus" AS ENUM ('awaiting_payment', 'in_separation', 'cancel', 'order_dispatched', 'finish');
 
 -- CreateEnum
-CREATE TYPE "PaymentMethod" AS ENUM ('money', 'credit_card', 'debit_card', 'ticket', 'duplicata');
+CREATE TYPE "PaymentMethod" AS ENUM ('money', 'credit_card', 'debit_card', 'ticket', 'duplicata', 'pix');
 
 -- CreateEnum
 CREATE TYPE "PeriodCoupon" AS ENUM ('infinite', 'due_date', 'quantity');
@@ -69,8 +69,23 @@ CREATE TABLE "employees" (
 );
 
 -- CreateTable
+CREATE TABLE "Comissions" (
+    "id" TEXT NOT NULL,
+    "company_id" TEXT NOT NULL,
+    "employee_id" TEXT NOT NULL,
+    "order_id" TEXT NOT NULL,
+    "value" DECIMAL(10,2) NOT NULL,
+    "month" TEXT NOT NULL,
+    "year" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Comissions_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "clients" (
     "id" TEXT NOT NULL,
+    "company_id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "cpf" VARCHAR(15) NOT NULL,
     "phone" TEXT NOT NULL,
@@ -82,20 +97,10 @@ CREATE TABLE "clients" (
     "zip_code" VARCHAR(11) NOT NULL,
     "city" TEXT NOT NULL,
     "state" VARCHAR(2) NOT NULL,
-    "password" TEXT NOT NULL,
+    "password" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "clients_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "clients_companies" (
-    "id" TEXT NOT NULL,
-    "company_id" TEXT NOT NULL,
-    "client_id" TEXT NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "clients_companies_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -123,19 +128,29 @@ CREATE TABLE "products" (
     "thumbnail_id" TEXT,
     "type_unit" "Unity" NOT NULL,
     "unit_desc" TEXT,
-    "inventory" INTEGER,
-    "weight" DECIMAL(10,2),
-    "liter" DECIMAL(10,2),
-    "length" DECIMAL(10,2),
+    "inventory" DECIMAL(10,2),
     "width" JSONB,
     "shipping" JSONB,
     "unity" TEXT,
     "details" TEXT,
-    "promotions" TEXT[],
+    "promotions" TEXT,
     "tags" TEXT[],
+    "have_adictional" BOOLEAN NOT NULL DEFAULT false,
+    "adictional_items_id" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "products_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "sizes" (
+    "id" TEXT NOT NULL,
+    "product_id" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "inventory" INTEGER NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "sizes_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -290,6 +305,7 @@ CREATE TABLE "coupons" (
     "period" "PeriodCoupon" NOT NULL,
     "number_used" INTEGER,
     "expires_date" TIMESTAMP(3),
+    "active" BOOLEAN NOT NULL DEFAULT true,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "coupons_pkey" PRIMARY KEY ("id")
@@ -382,6 +398,21 @@ CREATE TABLE "partition_sale" (
     CONSTRAINT "partition_sale_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "pay_forms" (
+    "id" TEXT NOT NULL,
+    "company_id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "tag" "PaymentMethod" NOT NULL,
+    "is_installments" BOOLEAN NOT NULL,
+    "installments" INTEGER NOT NULL,
+    "interval_days" TEXT NOT NULL,
+    "active" BOOLEAN NOT NULL DEFAULT true,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "pay_forms_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "companies_cnpj_key" ON "companies"("cnpj");
 
@@ -395,19 +426,31 @@ CREATE UNIQUE INDEX "employees_user_key" ON "employees"("user");
 CREATE UNIQUE INDEX "clients_cpf_key" ON "clients"("cpf");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "clients_email_key" ON "clients"("email");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "products_sku_key" ON "products"("sku");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "products_internal_code_key" ON "products"("internal_code");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "promotions_title_key" ON "promotions"("title");
+
 -- AddForeignKey
 ALTER TABLE "employees" ADD CONSTRAINT "employees_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "companies"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "clients_companies" ADD CONSTRAINT "clients_companies_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "companies"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Comissions" ADD CONSTRAINT "Comissions_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "companies"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "clients_companies" ADD CONSTRAINT "clients_companies_client_id_fkey" FOREIGN KEY ("client_id") REFERENCES "clients"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Comissions" ADD CONSTRAINT "Comissions_employee_id_fkey" FOREIGN KEY ("employee_id") REFERENCES "employees"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Comissions" ADD CONSTRAINT "Comissions_order_id_fkey" FOREIGN KEY ("order_id") REFERENCES "orders"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "clients" ADD CONSTRAINT "clients_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "companies"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "products" ADD CONSTRAINT "products_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "companies"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -417,6 +460,9 @@ ALTER TABLE "products" ADD CONSTRAINT "products_category_id_fkey" FOREIGN KEY ("
 
 -- AddForeignKey
 ALTER TABLE "products" ADD CONSTRAINT "products_sub_category_id_fkey" FOREIGN KEY ("sub_category_id") REFERENCES "sub_categories"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "sizes" ADD CONSTRAINT "sizes_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "taxes" ADD CONSTRAINT "taxes_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -471,3 +517,6 @@ ALTER TABLE "partition_sale" ADD CONSTRAINT "partition_sale_companyId_fkey" FORE
 
 -- AddForeignKey
 ALTER TABLE "partition_sale" ADD CONSTRAINT "partition_sale_partition_sale_category_id_fkey" FOREIGN KEY ("partition_sale_category_id") REFERENCES "partition_sale_category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "pay_forms" ADD CONSTRAINT "pay_forms_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "companies"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

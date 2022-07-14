@@ -50,12 +50,13 @@ model Company {
   Promotion               Promotion[]
   Category                Category[]
   SubCat                  SubCat[]
-  ClientsCompanies        ClientsCompanies[]
   PartitionSale           PartitionSale[]
   PartitionSaleCategory   PartitionSaleCategory[]
   AddictionalItemCategory AddictionalItemCategory[]
+  PayForms                PayForms[]
   @@map("companies")
-  PayForms PayForms[]
+  Comissions Comissions[]
+  Client     Client[]
 }
 
 enum Permission {
@@ -77,14 +78,31 @@ model Employee {
   created_at DateTime   @default(now())
 
   @@map("employees")
+  Comissions Comissions[]
+}
+
+model Comissions {
+  id          String   @id @default(uuid())
+  company_id  String
+  company     Company  @relation(fields: [company_id], references: [id])
+  employee_id String
+  employee    Employee @relation(fields: [employee_id], references: [id])
+  order_id    String
+  order       Order    @relation(fields: [order_id], references: [id])
+  value       Decimal  @db.Decimal(10, 2)
+  month       String
+  year        String
+  created_at  DateTime @default(now())
 }
 
 model Client {
   id         String   @id @default(uuid())
+  company_id String
+  company    Company  @relation(fields: [company_id], references: [id])
   name       String
   cpf        String   @unique @db.VarChar(15)
   phone      String
-  email      String?
+  email      String?  @unique
   street     String
   number     String
   comp       String?
@@ -92,23 +110,11 @@ model Client {
   zip_code   String   @db.VarChar(11)
   city       String
   state      String   @db.VarChar(2)
-  password   String
+  password   String?
   created_at DateTime @default(now())
 
-  Order            Order[]
-  ClientsCompanies ClientsCompanies[]
+  Order Order[]
   @@map("clients")
-}
-
-model ClientsCompanies {
-  id         String   @id @default(uuid())
-  company_id String
-  company    Company  @relation(fields: [company_id], references: [id])
-  client_id  String
-  client     Client   @relation(fields: [client_id], references: [id])
-  created_at DateTime @default(now())
-
-  @@map("clients_companies")
 }
 
 enum Calc {
@@ -289,6 +295,7 @@ model Order {
   created_at           DateTime    @default(now())
 
   @@map("orders")
+  Comissions Comissions[]
 }
 
 model Config {
