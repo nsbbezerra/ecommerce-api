@@ -23,47 +23,23 @@ export class RegisterClientController {
     const hash = await bcrypt.hash(password, 10);
 
     try {
-      const client = await prismaClient.client.findFirst({
-        where: { cpf },
+      await prismaClient.client.create({
+        data: {
+          company_id,
+          name,
+          cpf,
+          phone,
+          email,
+          street,
+          number,
+          comp,
+          district,
+          zip_code,
+          city,
+          state,
+          password: hash,
+        },
       });
-
-      if (client) {
-        await prismaClient.clientsCompanies.create({
-          data: {
-            client_id: client.id,
-            company_id: company_id,
-          },
-        });
-        return res
-          .status(201)
-          .json({ message: "As informações foram inseridas com sucesso" });
-      } else {
-        const client = await prismaClient.client.create({
-          data: {
-            name,
-            cpf,
-            phone,
-            email,
-            street,
-            number,
-            comp,
-            district,
-            zip_code,
-            city,
-            state,
-            password: hash,
-          },
-        });
-        await prismaClient.clientsCompanies.create({
-          data: {
-            client_id: client.id,
-            company_id: company_id,
-          },
-        });
-        return res
-          .status(201)
-          .json({ message: "As informações foram inseridas com sucesso" });
-      }
     } catch (error) {
       next(error);
     }
@@ -99,26 +75,22 @@ export class RegisterClientController {
     const { company_id } = req.params;
 
     try {
-      const clients = await prismaClient.clientsCompanies.findMany({
+      const clients = await prismaClient.client.findMany({
         where: { company_id },
         select: {
-          client: {
-            select: {
-              name: true,
-              city: true,
-              comp: true,
-              cpf: true,
-              district: true,
-              email: true,
-              id: true,
-              number: true,
-              password: false,
-              phone: true,
-              state: true,
-              street: true,
-              zip_code: true,
-            },
-          },
+          name: true,
+          city: true,
+          comp: true,
+          cpf: true,
+          district: true,
+          email: true,
+          id: true,
+          number: true,
+          password: false,
+          phone: true,
+          state: true,
+          street: true,
+          zip_code: true,
         },
       });
       return res.status(200).json(clients);
