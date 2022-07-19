@@ -98,6 +98,7 @@ export class PromotionsController {
             .json({ message: "Informações excluídas com sucesso" });
         })
         .catch((err) => {
+          delPromo(id);
           next(err);
         });
     } catch (error) {

@@ -2,6 +2,16 @@ import { NextFunction, Request, Response } from "express";
 import { prismaClient } from "../../../database/prisma";
 import { bucket } from "../../services/firebase";
 
+async function removeThumb(id: string) {
+  await prismaClient.company.update({
+    where: { id },
+    data: {
+      thumbnail: "",
+      thumbnail_id: "",
+    },
+  });
+}
+
 export class UpdateCompanyController {
   async UpdateInfo(req: Request, res: Response, next: NextFunction) {
     const {
@@ -93,18 +103,13 @@ export class UpdateCompanyController {
         .file(name)
         .delete()
         .then(() => {
-          prismaClient.company.update({
-            where: { id },
-            data: {
-              thumbnail: "",
-              thumbnail_id: "",
-            },
-          });
+          removeThumb(id);
           return res
             .status(200)
             .json({ message: "Imagem excluída com sucesso" });
         })
         .catch((error) => {
+          removeThumb(id);
           next(error);
         });
     } catch (error) {

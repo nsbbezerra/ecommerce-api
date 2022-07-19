@@ -104,6 +104,7 @@ export class ListProductsController {
             .json({ message: "Imagem excluída com sucesso" });
         })
         .catch((err) => {
+          deleteThumb(id);
           next(err);
         });
     } catch (error) {
@@ -147,6 +148,7 @@ export class ListProductsController {
             .json({ message: "Imagem excluída com sucesso" });
         })
         .catch((err) => {
+          deleteImage(id);
           next(err);
         });
     } catch (error) {
