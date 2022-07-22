@@ -24,6 +24,8 @@ import { SizesController } from "../controllers/Sizes/SizesController";
 import { PromotionsController } from "../controllers/Promotions/PromotionsController";
 import { CouponsController } from "../controllers/Coupons/CouponsController";
 import { PayFormController } from "../controllers/PayForm/PayFormController";
+import { ExpensesController } from "../controllers/Expenses/ExpensesController";
+import { RevenuesController } from "../controllers/Revenues/RevenuesController";
 
 const router = express.Router();
 
@@ -56,6 +58,8 @@ const SizesControl = new SizesController();
 const PromotionControl = new PromotionsController();
 const CouponsControll = new CouponsController();
 const PayFormControll = new PayFormController();
+const ExpensesControll = new ExpensesController();
+const RevenuesControll = new RevenuesController();
 
 /** -------------------- COMPANY -------------------- */
 router.post("/company", InsertCompanyController.Store);
@@ -312,5 +316,15 @@ router.get("/pay_form/:company_id", PayFormControll.Find);
 router.post("/pay_form/:company_id", verifyToken, PayFormControll.Store);
 router.put("/pay_form/:id", verifyToken, PayFormControll.Update);
 router.put("/pay_form_active/:id", verifyToken, PayFormControll.Active);
+
+/** ----------------------------- REVENUES ---------------------------- */
+router.post("/revenues/:company_id", verifyToken, RevenuesControll.Store);
+router.put("/revenues/:id", verifyToken, RevenuesControll.Update);
+router.get("/revenues/:company_id/:type/:month/:year", RevenuesControll.Find);
+
+/** ----------------------------- EXPENSES ---------------------------- */
+router.post("/expenses/:company_id", verifyToken, ExpensesControll.Store);
+router.put("/expenses/:id", verifyToken, ExpensesControll.Update);
+router.get("/expenses/:company_id/:type/:month/:year", ExpensesControll.Find);
 
 export { router };
