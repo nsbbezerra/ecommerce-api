@@ -40,6 +40,9 @@ export class RegisterClientController {
           password: hash,
         },
       });
+      return res
+        .status(201)
+        .json({ message: "Informações inseridas com sucesso" });
     } catch (error) {
       next(error);
     }
@@ -63,6 +66,13 @@ export class RegisterClientController {
           state: true,
           street: true,
           zip_code: true,
+          company: {
+            select: {
+              id: true,
+              name: true,
+              fantasy_name: true,
+            },
+          },
         },
       });
       return res.status(200).json(clients);

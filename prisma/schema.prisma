@@ -93,6 +93,7 @@ model Comissions {
   month       String
   year        String
   created_at  DateTime @default(now())
+  @@map("comissions")
 }
 
 model Client {
