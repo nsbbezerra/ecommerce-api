@@ -67,6 +67,9 @@ export class RevenuesController {
           year,
         },
       });
+      return res
+        .status(201)
+        .json({ message: "Alterações inseridas com sucesso" });
     } catch (error) {
       next(error);
     }
