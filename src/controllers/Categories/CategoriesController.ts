@@ -63,7 +63,7 @@ export class CategoriesController {
 
     try {
       const categories = await prismaClient.category.findMany({
-        where: { company_id },
+        where: { company_id, active: true },
         orderBy: { title: "asc" },
       });
       return res.status(200).json(categories);

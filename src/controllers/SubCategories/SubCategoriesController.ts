@@ -55,7 +55,7 @@ export class SubCategoriesController {
 
     try {
       const sub_categories = await prismaClient.subCat.findMany({
-        where: { category_id },
+        where: { category_id, active: true },
         orderBy: { title: "asc" },
       });
       return res.status(200).json(sub_categories);

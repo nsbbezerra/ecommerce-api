@@ -394,6 +394,7 @@ export class ProductController {
       const subCategories = await prismaClient.subCat.findMany({
         where: {
           category_id: id,
+          active: true,
         },
         select: {
           id: true,
