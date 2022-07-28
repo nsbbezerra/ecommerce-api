@@ -57,6 +57,9 @@ export class ListPDVController {
           type_unit: true,
           have_adictional: true,
           type_sale: true,
+          sale_options: true,
+          sale_options_category: true,
+          adictional_items_id: true,
         },
         orderBy: { title: "asc" },
       });
