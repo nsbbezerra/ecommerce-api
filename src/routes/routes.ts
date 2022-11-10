@@ -330,7 +330,7 @@ router.put("/expenses/:id", verifyToken, ExpensesControll.Update);
 router.get("/expenses/:company_id/:type/:month/:year", ExpensesControll.Find);
 
 /** ----------------------------- PDV SALES --------------------------- */
-router.get("/pdv_clients/:company_id", ListPDVControll.Clients);
+router.get("/pdv_dependent/:company_id", ListPDVControll.Dependents);
 router.get("/pdv_products/:company_id", ListPDVControll.Products);
 
 export { router };
