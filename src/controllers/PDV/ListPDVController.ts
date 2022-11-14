@@ -96,6 +96,15 @@ export class ListPDVController {
           sale_options: true,
           sale_options_category: true,
           adictional_items_id: true,
+          width: true,
+          inventory: true,
+          Sizes: {
+            select: {
+              id: true,
+              description: true,
+              inventory: true,
+            },
+          },
         },
         orderBy: { title: "asc" },
       });
