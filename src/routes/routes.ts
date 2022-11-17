@@ -27,6 +27,7 @@ import { PayFormController } from "../controllers/PayForm/PayFormController";
 import { ExpensesController } from "../controllers/Expenses/ExpensesController";
 import { RevenuesController } from "../controllers/Revenues/RevenuesController";
 import { ListPDVController } from "../controllers/PDV/ListPDVController";
+import { CashierController } from "../controllers/Cashier/CashierController";
 
 const router = express.Router();
 
@@ -62,6 +63,7 @@ const PayFormControll = new PayFormController();
 const ExpensesControll = new ExpensesController();
 const RevenuesControll = new RevenuesController();
 const ListPDVControll = new ListPDVController();
+const CashierControll = new CashierController();
 
 /** -------------------- COMPANY -------------------- */
 router.post("/company", InsertCompanyController.Store);
@@ -332,5 +334,9 @@ router.get("/expenses/:company_id/:type/:month/:year", ExpensesControll.Find);
 /** ----------------------------- PDV SALES --------------------------- */
 router.get("/pdv_dependent/:company_id", ListPDVControll.Dependents);
 router.get("/pdv_products/:company_id", ListPDVControll.Products);
+
+/** ----------------------------- CASHIER ----------------------------- */
+router.post("/cashier/:company_id", verifyToken, CashierControll.Create);
+router.post("/find_cashier/:company_id", CashierControll.FindCashier);
 
 export { router };

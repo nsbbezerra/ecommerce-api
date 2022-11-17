@@ -54,9 +54,11 @@ model Company {
   PartitionSaleCategory   PartitionSaleCategory[]
   AddictionalItemCategory AddictionalItemCategory[]
   PayForms                PayForms[]
+  Comissions              Comissions[]
+  Client                  Client[]
+  Cashier                 Cashier[]
+
   @@map("companies")
-  Comissions Comissions[]
-  Client     Client[]
 }
 
 enum Permission {
@@ -66,19 +68,20 @@ enum Permission {
 }
 
 model Employee {
-  id         String     @id @default(uuid())
+  id         String       @id @default(uuid())
   company_id String
-  company    Company    @relation(fields: [company_id], references: [id])
+  company    Company      @relation(fields: [company_id], references: [id])
   name       String
   phone      String?
-  user       String     @unique
+  user       String       @unique
   password   String
   permission Permission
-  active     Boolean    @default(true)
-  created_at DateTime   @default(now())
+  active     Boolean      @default(true)
+  created_at DateTime     @default(now())
+  Comissions Comissions[]
+  Cashier    Cashier[]
 
   @@map("employees")
-  Comissions Comissions[]
 }
 
 model Comissions {
@@ -93,6 +96,7 @@ model Comissions {
   month       String
   year        String
   created_at  DateTime @default(now())
+
   @@map("comissions")
 }
 
@@ -115,6 +119,7 @@ model Client {
   created_at DateTime @default(now())
 
   Order Order[]
+
   @@map("clients")
 }
 
@@ -180,6 +185,7 @@ model Product {
   Assets Assets[]
   Taxes  Taxes[]
   Sizes  Sizes[]
+
   @@map("products")
 }
 
@@ -275,15 +281,15 @@ enum OrderStatus {
 }
 
 model Order {
-  id                   String      @id @default(uuid())
+  id                   String       @id @default(uuid())
   company_id           String
-  company              Company     @relation(fields: [company_id], references: [id])
+  company              Company      @relation(fields: [company_id], references: [id])
   client_id            String
-  client               Client      @relation(fields: [client_id], references: [id])
+  client               Client       @relation(fields: [client_id], references: [id])
   products             Json
-  total_order          Decimal     @db.Decimal(10, 2)
-  discount             Decimal     @db.Decimal(10, 2)
-  total_to_pay         Decimal     @db.Decimal(10, 2)
+  total_order          Decimal      @db.Decimal(10, 2)
+  discount             Decimal      @db.Decimal(10, 2)
+  total_to_pay         Decimal      @db.Decimal(10, 2)
   payment_id           String?
   payment_method       String?
   payment_type         String?
@@ -293,10 +299,10 @@ model Order {
   shipping_information String?
   month                String
   year                 String
-  created_at           DateTime    @default(now())
+  created_at           DateTime     @default(now())
+  Comissions           Comissions[]
 
   @@map("orders")
-  Comissions Comissions[]
 }
 
 model Config {
@@ -410,6 +416,7 @@ model Category {
 
   Product Product[]
   SubCat  SubCat[]
+
   @@map("categories")
 }
 
@@ -426,6 +433,7 @@ model SubCat {
   created_at  DateTime @default(now())
 
   Product Product[]
+
   @@map("sub_categories")
 }
 
@@ -437,6 +445,7 @@ model AddictionalItemCategory {
   created_at DateTime @default(now())
 
   AddictionalItem AddictionalItem[]
+
   @@map("addictional_items_category")
 }
 
@@ -460,6 +469,7 @@ model PartitionSaleCategory {
   created_at DateTime @default(now())
 
   PartitionSale PartitionSale[]
+
   @@map("partition_sale_category")
 }
 
@@ -474,6 +484,7 @@ model PartitionSale {
 
   Company   Company? @relation(fields: [companyId], references: [id])
   companyId String?
+
   @@map("partition_sale")
 }
 
@@ -490,4 +501,43 @@ model PayForms {
   created_at      DateTime      @default(now())
 
   @@map("pay_forms")
+}
+
+enum CashierStatus {
+  opened
+  closed
+}
+
+model Cashier {
+  id              String            @id @default(uuid())
+  company_id      String
+  company         Company           @relation(fields: [company_id], references: [id])
+  employee_id     String
+  employee        Employee          @relation(fields: [employee_id], references: [id])
+  open_value      Decimal           @db.Decimal(10, 2)
+  open_date       DateTime
+  close_value     Decimal           @db.Decimal(10, 2)
+  close_date      DateTime
+  status          CashierStatus
+  created_at      DateTime          @default(now())
+  CashierMoviment CashierMoviment[]
+
+  @@map("cashiers")
+}
+
+enum CashierMovimentType {
+  deposit
+  withdraw
+}
+
+model CashierMoviment {
+  id            String              @id @default(uuid())
+  cashier_id    String
+  cashier       Cashier             @relation(fields: [cashier_id], references: [id])
+  moviment_type CashierMovimentType
+  description   String
+  value         Decimal             @db.Decimal(10, 2)
+  created_at    DateTime            @default(now())
+
+  @@map("cashier_moviments")
 }
