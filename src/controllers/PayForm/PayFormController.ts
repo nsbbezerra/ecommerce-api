@@ -84,4 +84,17 @@ export class PayFormController {
       next(error);
     }
   }
+  async FindByPaymentOrder(req: Request, res: Response, next: NextFunction) {
+    const { company_id } = req.params;
+
+    try {
+      const payForms = await prismaClient.payForms.findMany({
+        where: { company_id, active: true },
+        orderBy: { name: "asc" },
+      });
+      return res.status(200).json(payForms);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

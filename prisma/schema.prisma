@@ -80,6 +80,7 @@ model Employee {
   created_at DateTime     @default(now())
   Comissions Comissions[]
   Cashier    Cashier[]
+  Order      Order[]
 
   @@map("employees")
 }
@@ -181,10 +182,11 @@ model Product {
   adictional_items_id   String?
   created_at            DateTime  @default(now())
 
-  Image  Image[]
-  Assets Assets[]
-  Taxes  Taxes[]
-  Sizes  Sizes[]
+  Image       Image[]
+  Assets      Assets[]
+  Taxes       Taxes[]
+  Sizes       Sizes[]
+  OrdertItems OrdertItems[]
 
   @@map("products")
 }
@@ -280,29 +282,70 @@ enum OrderStatus {
   finish
 }
 
+enum OrderOrigin {
+  ecommerce
+  pdv
+}
+
+enum PaymentMethod {
+  money
+  check
+  credit_card
+  debit_card
+  ticket
+  duplicata
+  pix
+  checkout
+}
+
 model Order {
-  id                   String       @id @default(uuid())
+  id                   String         @id @default(uuid())
   company_id           String
-  company              Company      @relation(fields: [company_id], references: [id])
+  company              Company        @relation(fields: [company_id], references: [id])
   client_id            String
-  client               Client       @relation(fields: [client_id], references: [id])
-  products             Json
-  total_order          Decimal      @db.Decimal(10, 2)
-  discount             Decimal      @db.Decimal(10, 2)
-  total_to_pay         Decimal      @db.Decimal(10, 2)
+  client               Client         @relation(fields: [client_id], references: [id])
+  employee_id          String
+  employee             Employee       @relation(fields: [employee_id], references: [id])
+  total_order          Decimal        @db.Decimal(10, 2)
+  discount             Decimal        @db.Decimal(10, 2)
+  total_to_pay         Decimal        @db.Decimal(10, 2)
   payment_id           String?
-  payment_method       String?
-  payment_type         String?
+  payment_method       PaymentMethod?
+  checkout_id          String
   payment_status       Payment
   order_status         OrderStatus
+  origin               OrderOrigin
   shipping_code        String?
   shipping_information String?
   month                String
   year                 String
-  created_at           DateTime     @default(now())
+  created_at           DateTime       @default(now())
   Comissions           Comissions[]
+  OrdertItems          OrdertItems[]
 
   @@map("orders")
+}
+
+model OrdertItems {
+  id             String   @id @default(uuid())
+  order_id       String
+  order          Order    @relation(fields: [order_id], references: [id])
+  product_id     String
+  product        Product  @relation(fields: [product_id], references: [id])
+  quantity       Decimal  @db.Decimal(10, 2)
+  in_promotion   Boolean
+  profit_percent Decimal  @db.Decimal(10, 2)
+  type           Unity
+  sale_value     Decimal  @db.Decimal(10, 2)
+  sale_total     Decimal  @db.Decimal(10, 2)
+  partition      Json?
+  adictional     Json?
+  widths         Decimal? @db.Decimal(10, 2)
+  height         Decimal? @db.Decimal(10, 2)
+  size           Json?
+  created_at     DateTime @default(now())
+
+  @@map("order_items")
 }
 
 model Config {
@@ -323,15 +366,6 @@ model Config {
   created_at                   DateTime @default(now())
 
   @@map("configs")
-}
-
-enum PaymentMethod {
-  money
-  credit_card
-  debit_card
-  ticket
-  duplicata
-  pix
 }
 
 model Revenue {
