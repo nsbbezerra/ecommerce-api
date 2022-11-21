@@ -43,7 +43,6 @@ type OrderProps = {
   total_order: number;
   discount: number;
   total_to_pay: number;
-  checkout_id: string;
   payment_status: "wait" | "paid_out" | "refused" | "cancel";
   order_status:
     | "awaiting_payment"
@@ -113,7 +112,6 @@ export class OrdersPdv {
     try {
       const newOrder = await prismaClient.order.create({
         data: {
-          checkout_id: order.checkout_id,
           discount: order.discount,
           month: order.month,
           order_status: order.order_status,

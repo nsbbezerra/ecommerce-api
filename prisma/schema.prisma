@@ -57,6 +57,7 @@ model Company {
   Comissions              Comissions[]
   Client                  Client[]
   Cashier                 Cashier[]
+  Payments                Payments[]
 
   @@map("companies")
 }
@@ -311,7 +312,6 @@ model Order {
   total_to_pay         Decimal        @db.Decimal(10, 2)
   payment_id           String?
   payment_method       PaymentMethod?
-  checkout_id          String
   payment_status       Payment
   order_status         OrderStatus
   origin               OrderOrigin
@@ -322,6 +322,7 @@ model Order {
   created_at           DateTime       @default(now())
   Comissions           Comissions[]
   OrdertItems          OrdertItems[]
+  Payments             Payments[]
 
   @@map("orders")
 }
@@ -346,6 +347,22 @@ model OrdertItems {
   created_at     DateTime @default(now())
 
   @@map("order_items")
+}
+
+model Payments {
+  id          String   @id @default(uuid())
+  company_id  String
+  company     Company  @relation(fields: [company_id], references: [id])
+  order_id    String
+  order       Order    @relation(fields: [order_id], references: [id])
+  pay_form_id String
+  pay_form    PayForms @relation(fields: [pay_form_id], references: [id])
+  title       String
+  status      Payment
+  checkout_id String?
+  created_at  DateTime @default(now())
+
+  @@map("payments")
 }
 
 model Config {
@@ -533,6 +550,7 @@ model PayForms {
   interval_days   String
   active          Boolean       @default(true)
   created_at      DateTime      @default(now())
+  Payments        Payments[]
 
   @@map("pay_forms")
 }
