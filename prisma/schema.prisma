@@ -146,42 +146,44 @@ enum TypeSale {
 }
 
 model Product {
-  id                    String    @id @default(uuid())
-  company_id            String
-  company               Company   @relation(fields: [company_id], references: [id])
-  category_id           String
-  category              Category  @relation(fields: [category_id], references: [id])
-  sub_category_id       String
-  sub_category          SubCat    @relation(fields: [sub_category_id], references: [id])
-  title                 String
-  description           String?
-  sku                   String    @unique
-  barcode               String
-  internal_code         String    @unique
-  calc_price            Calc
-  cost_value            Json
-  profit_percent        Decimal   @db.Decimal(10, 2)
-  markup_factor         Decimal   @db.Decimal(10, 2)
-  sale_value            Decimal   @db.Decimal(10, 2)
-  type_sale             TypeSale?
-  sale_options          String?
-  sale_options_category String?
-  active                Boolean   @default(true)
-  in_promotion          Boolean   @default(false)
-  thumbnail             String?
-  thumbnail_id          String?
-  type_unit             Unity
-  unit_desc             String?
-  inventory             Decimal?  @db.Decimal(10, 2)
-  width                 Json?
-  shipping              Json?
-  unity                 String?
-  details               String?
-  promotions            String?
-  tags                  String[]
-  have_adictional       Boolean   @default(false)
-  adictional_items_id   String?
-  created_at            DateTime  @default(now())
+  id                     String                   @id @default(uuid())
+  company_id             String
+  company                Company                  @relation(fields: [company_id], references: [id])
+  category_id            String
+  category               Category                 @relation(fields: [category_id], references: [id])
+  sub_category_id        String
+  sub_category           SubCat                   @relation(fields: [sub_category_id], references: [id])
+  title                  String
+  description            String?
+  sku                    String                   @unique
+  barcode                String
+  internal_code          String                   @unique
+  calc_price             Calc
+  cost_value             Json
+  profit_percent         Decimal                  @db.Decimal(10, 2)
+  markup_factor          Decimal                  @db.Decimal(10, 2)
+  sale_value             Decimal                  @db.Decimal(10, 2)
+  type_sale              TypeSale?
+  sale_options           String?
+  sale_options_category  String?
+  sale_options_partition PartitionSaleCategory?   @relation(fields: [sale_options_category], references: [id])
+  active                 Boolean                  @default(true)
+  in_promotion           Boolean                  @default(false)
+  thumbnail              String?
+  thumbnail_id           String?
+  type_unit              Unity
+  unit_desc              String?
+  inventory              Decimal?                 @db.Decimal(10, 2)
+  width                  Json?
+  shipping               Json?
+  unity                  String?
+  details                String?
+  promotions             String?
+  tags                   String[]
+  have_adictional        Boolean                  @default(false)
+  adictional_items_id    String?
+  addictional_items      AddictionalItemCategory? @relation(fields: [adictional_items_id], references: [id])
+  created_at             DateTime                 @default(now())
 
   Image       Image[]
   Assets      Assets[]
@@ -496,6 +498,7 @@ model AddictionalItemCategory {
   created_at DateTime @default(now())
 
   AddictionalItem AddictionalItem[]
+  Product         Product[]
 
   @@map("addictional_items_category")
 }
@@ -520,6 +523,7 @@ model PartitionSaleCategory {
   created_at DateTime @default(now())
 
   PartitionSale PartitionSale[]
+  Product       Product[]
 
   @@map("partition_sale_category")
 }
